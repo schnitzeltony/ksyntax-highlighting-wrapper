@@ -205,12 +205,10 @@ int KSyntaxHighlightingWrapper::themeNumber()
 void KSyntaxHighlightingWrapper::setThemeNumber(const int themeNumber)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->m_highlighter) {
-        QVector<KSyntaxHighlighting::Theme> themes = d->m_repository.themes();
-        if(themeNumber < themes.count()) {
-            if(d->setTheme(themes[themeNumber])) {
-                emit themeChanged();
-            }
+    QVector<KSyntaxHighlighting::Theme> themes = d->m_repository.themes();
+    if(themeNumber < themes.count()) {
+        if(d->setTheme(themes[themeNumber])) {
+            emit themeChanged();
         }
     }
 }
@@ -219,10 +217,8 @@ const QStringList KSyntaxHighlightingWrapper::themeNames() const
 {
     Q_D(const KSyntaxHighlightingWrapper);
     QStringList themeNames;
-    if(d->m_highlighter) {
-        for(auto theme : d->m_repository.themes()) {
-            themeNames.append(theme.name());
-        }
+    for(auto theme : d->m_repository.themes()) {
+        themeNames.append(theme.name());
     }
     return themeNames;
 }
@@ -231,10 +227,8 @@ const QStringList KSyntaxHighlightingWrapper::themeNamesTranslated() const
 {
     Q_D(const KSyntaxHighlightingWrapper);
     QStringList themeNames;
-    if(d->m_highlighter) {
-        for(auto theme : d->m_repository.themes()) {
-            themeNames.append(theme.translatedName());
-        }
+    for(auto theme : d->m_repository.themes()) {
+        themeNames.append(theme.translatedName());
     }
     return themeNames;
 }
