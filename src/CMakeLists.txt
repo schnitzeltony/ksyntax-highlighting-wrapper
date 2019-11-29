@@ -2,6 +2,8 @@ add_library(KSyntaxHighlightingWrapper
     SHARED
         # for moc & qtcreator to have it in-tree
         ${CMAKE_SOURCE_DIR}/include/ksyntaxhighlightingwrapper.h
+        ksyntaxhighlightingwrapper_p.h
+        ksyntaxhighlightingwrapper.cpp
         resources.qrc
 )
 add_library(KSyntaxHighlightingWrapper::KSyntaxHighlightingWrapper ALIAS KSyntaxHighlightingWrapper)
@@ -23,6 +25,7 @@ include_directories(
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
     # generated export header
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # announce headers - target perspective
@@ -40,7 +43,10 @@ target_compile_definitions(KSyntaxHighlightingWrapper PRIVATE $<$<OR:$<CONFIG:De
 target_link_libraries(KSyntaxHighlightingWrapper
     PRIVATE
         Qt5::Core
+        Qt5::Quick
         KF5::SyntaxHighlighting
+        # ask linker to help us finding unresolved symbols
+        "-Wl,--no-undefined"
 )
 
 # install library

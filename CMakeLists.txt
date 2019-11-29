@@ -18,7 +18,7 @@ include(FeatureSummary)
 include(GNUInstallDirs)
 
 # qt5 libs
-find_package(Qt5 "5.12.0" COMPONENTS Core CONFIG REQUIRED)
+find_package(Qt5 "5.12.0" COMPONENTS Core Quick CONFIG REQUIRED)
 
 # kde syntax-higlighting
 find_package(KF5SyntaxHighlighting REQUIRED)
