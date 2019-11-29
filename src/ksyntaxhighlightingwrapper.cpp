@@ -10,12 +10,65 @@ KSyntaxHighlighting::Repository KSyntaxHighlightingWrapperPrivate::m_repository;
 // private
 KSyntaxHighlightingWrapperPrivate::KSyntaxHighlightingWrapperPrivate(KSyntaxHighlightingWrapper* pPublic) :
     m_highlighter(nullptr),
+    m_quickTextDocument(nullptr),
     q_ptr(pPublic)
 {
 }
 
 KSyntaxHighlightingWrapperPrivate::~KSyntaxHighlightingWrapperPrivate()
 {
+}
+
+bool KSyntaxHighlightingWrapperPrivate::setDefinition(KSyntaxHighlighting::Definition def)
+{
+    if(def.isValid()) {
+        if(m_highlighter) {
+            if(def != m_highlighter->definition()) {
+                m_highlighter->setDefinition(def);
+                return true;
+            }
+        }
+        else {
+            m_definitionNoHighlighter = def;
+        }
+    }
+    return false;
+}
+
+KSyntaxHighlighting::Definition KSyntaxHighlightingWrapperPrivate::currentDefinition()
+{
+    if(m_highlighter) {
+        return m_highlighter->definition();
+    }
+    else {
+        return m_definitionNoHighlighter;
+    }
+}
+
+bool KSyntaxHighlightingWrapperPrivate::setTheme(KSyntaxHighlighting::Theme theme)
+{
+    if(theme.isValid()) {
+        if(m_highlighter) {
+            if(theme.name() != m_highlighter->theme().name()) {
+                m_highlighter->setTheme(theme);
+                return true;
+            }
+        }
+        else {
+            m_themeNoHighlighter = theme;
+        }
+    }
+    return false;
+}
+
+KSyntaxHighlighting::Theme KSyntaxHighlightingWrapperPrivate::curentTheme()
+{
+    if(m_highlighter) {
+        return m_highlighter->theme();
+    }
+    else {
+        return m_themeNoHighlighter;
+    }
 }
 
 // public
@@ -37,111 +90,113 @@ KSyntaxHighlightingWrapper::~KSyntaxHighlightingWrapper()
 void KSyntaxHighlightingWrapper::setTextDocument(QObject *textDocument)
 {
     Q_D(KSyntaxHighlightingWrapper);
+    // Should we handle multiple calls?
+    if(d->m_highlighter)
+        return;
+
     QTextDocument* textDocumentCast = qobject_cast<QTextDocument *>(textDocument);
-    if(d->m_highlighter && textDocumentCast != d->m_highlighter->document()) {
-        if(d->m_highlighter->definition().isValid()) {
-            emit definitionChanged();
-        }
-        if(d->m_highlighter->theme().isValid()) {
-            emit themeChanged();
-        }
-        delete d->m_highlighter;
-        d->m_highlighter = nullptr;
-    }
     if(textDocumentCast) {
         d->m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(textDocumentCast);
+        // Did we receive setting at times we had no document?
+        if(d->m_definitionNoHighlighter.isValid() && d->setDefinition(d->m_definitionNoHighlighter)) {
+            emit definitionChanged();
+        }
+        d->m_definitionNoHighlighter = KSyntaxHighlighting::Definition();
+
+        if(d->m_themeNoHighlighter.isValid() && d->setTheme(d->m_themeNoHighlighter)) {
+            emit themeChanged();
+        }
+        d->m_themeNoHighlighter = KSyntaxHighlighting::Theme();
+    }
+}
+
+QObject *KSyntaxHighlightingWrapper::textDocument() const
+{
+    Q_D(const KSyntaxHighlightingWrapper);
+    if(d->m_highlighter) {
+        return d->m_highlighter->document();
+    }
+    else {
+        return nullptr;
     }
 }
 
 void KSyntaxHighlightingWrapper::setQmlTextDocument(QObject *qmlTextDocument)
 {
     QQuickTextDocument* qmlTextDocumentCast = qobject_cast<QQuickTextDocument *>(qmlTextDocument);
-    if(qmlTextDocumentCast) {
+    Q_D(KSyntaxHighlightingWrapper);
+    d->m_quickTextDocument = qmlTextDocumentCast;
+    if(qmlTextDocument) {
         setTextDocument(qmlTextDocumentCast->textDocument());
     }
+}
+
+QObject *KSyntaxHighlightingWrapper::qmlTextDocument() const
+{
+    Q_D(const KSyntaxHighlightingWrapper);
+    return d->m_quickTextDocument;
 }
 
 void KSyntaxHighlightingWrapper::definitionForFileName(const QString &fileName)
 {
     Q_D(KSyntaxHighlightingWrapper);
     const auto def = d->m_repository.definitionForFileName(fileName);
-    if(d->m_highlighter && def.isValid()) {
-        d->m_highlighter->setDefinition(def);
+    if(d->setDefinition(def))
         emit definitionChanged();
-    }
 }
 
 void KSyntaxHighlightingWrapper::definitionForMimeType(const QString &mimeType)
 {
     Q_D(KSyntaxHighlightingWrapper);
     const auto def = d->m_repository.definitionForMimeType(mimeType);
-    if(d->m_highlighter && def.isValid()) {
-        d->m_highlighter->setDefinition(def);
+    if(d->setDefinition(def))
         emit definitionChanged();
-    }
 }
 
-const QString KSyntaxHighlightingWrapper::definitionName() const
+const QString KSyntaxHighlightingWrapper::definitionName()
 {
-    Q_D(const KSyntaxHighlightingWrapper);
-    QString strName;
-    if(d->m_highlighter) {
-        strName = d->m_highlighter->definition().name();
-    }
-    return strName;
+    Q_D(KSyntaxHighlightingWrapper);
+    return d->currentDefinition().name();
 }
 
 void KSyntaxHighlightingWrapper::setDefinitionName(const QString &definitionName)
 {
     Q_D(KSyntaxHighlightingWrapper);
     const auto def = d->m_repository.definitionForName(definitionName);
-    if(d->m_highlighter && def.isValid()) {
-        d->m_highlighter->setDefinition(def);
+    if(d->setDefinition(def))
         emit definitionChanged();
-    }
 }
 
-const QString KSyntaxHighlightingWrapper::themeName() const
+const QString KSyntaxHighlightingWrapper::themeName()
 {
-    Q_D(const KSyntaxHighlightingWrapper);
-    QString strName;
-    if(d->m_highlighter) {
-        strName = d->m_highlighter->theme().name();
-    }
-    return strName;
+    Q_D(KSyntaxHighlightingWrapper);
+    return d->curentTheme().name();
 }
 
 void KSyntaxHighlightingWrapper::setThemeName(const QString &themeName)
 {
     Q_D(KSyntaxHighlightingWrapper);
     const auto theme = d->m_repository.theme(themeName);
-    if(d->m_highlighter && theme.isValid()) {
-        d->m_highlighter->setTheme(theme);
+    if(d->setTheme(theme)) {
         emit themeChanged();
     }
 }
 
-const QString KSyntaxHighlightingWrapper::themeNameTranslated() const
+const QString KSyntaxHighlightingWrapper::themeNameTranslated()
 {
-    Q_D(const KSyntaxHighlightingWrapper);
-    QString strName;
-    if(d->m_highlighter) {
-        strName = d->m_highlighter->theme().translatedName();
-    }
-    return strName;
+    Q_D(KSyntaxHighlightingWrapper);
+    return d->curentTheme().translatedName();
 }
 
-int KSyntaxHighlightingWrapper::themeNumber() const
+int KSyntaxHighlightingWrapper::themeNumber()
 {
-    Q_D(const KSyntaxHighlightingWrapper);
+    Q_D(KSyntaxHighlightingWrapper);
     int themeNum = -1;
-    if(d->m_highlighter) {
-        QVector<KSyntaxHighlighting::Theme> themes = d->m_repository.themes();
-        for(int iTheme=0; iTheme<themes.size(); iTheme++) {
-            if(themes[iTheme].name() == d->m_highlighter->theme().name()) {
-                themeNum = iTheme;
-                break;
-            }
+    QVector<KSyntaxHighlighting::Theme> themes = d->m_repository.themes();
+    for(int iTheme=0; iTheme<themes.size(); iTheme++) {
+        if(themes[iTheme].name() == d->curentTheme().name()) {
+            themeNum = iTheme;
+            break;
         }
     }
     return themeNum;
@@ -153,8 +208,9 @@ void KSyntaxHighlightingWrapper::setThemeNumber(const int themeNumber)
     if(d->m_highlighter) {
         QVector<KSyntaxHighlighting::Theme> themes = d->m_repository.themes();
         if(themeNumber < themes.count()) {
-            d->m_highlighter->setTheme(themes[themeNumber]);
-            emit themeChanged();
+            if(d->setTheme(themes[themeNumber])) {
+                emit themeChanged();
+            }
         }
     }
 }

@@ -14,8 +14,21 @@ public:
     KSyntaxHighlightingWrapperPrivate(KSyntaxHighlightingWrapper* pPublic);
     virtual ~KSyntaxHighlightingWrapperPrivate();
 
+    bool setDefinition(KSyntaxHighlighting::Definition def);
+    KSyntaxHighlighting::Definition currentDefinition();
+
+    bool setTheme(KSyntaxHighlighting::Theme theme);
+    KSyntaxHighlighting::Theme curentTheme();
+
     static KSyntaxHighlighting::Repository m_repository;
     KSyntaxHighlighting::SyntaxHighlighter *m_highlighter;
+
+    // Just in case...
+    QQuickTextDocument *m_quickTextDocument;
+
+    // Keep as long as there is no document
+    KSyntaxHighlighting::Definition m_definitionNoHighlighter;
+    KSyntaxHighlighting::Theme m_themeNoHighlighter;
 
     KSyntaxHighlightingWrapper *q_ptr;
 };

@@ -4,6 +4,7 @@
 #include "ksyntaxhighlightingwrapper_export.h"
 #include <QObject>
 
+
 QT_BEGIN_NAMESPACE
 class QTextDocument;
 class QQuickTextDocument;
@@ -19,11 +20,11 @@ public:
     explicit KSyntaxHighlightingWrapper(QObject *parent = nullptr);
     virtual ~KSyntaxHighlightingWrapper();
 
-    // connect document
-    Q_INVOKABLE void setTextDocument(QObject *textDocument);
-    Q_INVOKABLE void setQmlTextDocument(QObject *qmlTextDocument);
+    // document
+    Q_PROPERTY(QObject* textDocument READ textDocument WRITE setTextDocument)
+    Q_PROPERTY(QObject* qmlTextDocument READ qmlTextDocument WRITE setQmlTextDocument)
 
-    // select definition
+    // access current definition
     Q_PROPERTY(QString definitionName READ definitionName WRITE setDefinitionName NOTIFY definitionChanged)
     Q_INVOKABLE void definitionForFileName(const QString &fileName);
     Q_INVOKABLE void definitionForMimeType(const QString &mimeType);
@@ -37,15 +38,19 @@ public:
     Q_PROPERTY(QStringList themeNames READ themeNames)
     Q_PROPERTY(QStringList themeNamesTranslated READ themeNamesTranslated)
 
-    //void setQmlTextDocument(const QQuickTextDocument* qmlTextDocument);
+    void setTextDocument(QObject *textDocument);
+    QObject *textDocument() const;
 
-    const QString definitionName() const;
+    void setQmlTextDocument(QObject *qmlTextDocument);
+    QObject *qmlTextDocument() const;
+
+    const QString definitionName();
     void setDefinitionName(const QString& definitionName);
 
-    const QString themeName() const;
+    const QString themeName();
     void setThemeName(const QString& themeName);
-    const QString themeNameTranslated() const;
-    int themeNumber() const;
+    const QString themeNameTranslated();
+    int themeNumber();
     void setThemeNumber(const int themeNumber);
 
     const QStringList themeNames() const;
