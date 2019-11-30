@@ -14,6 +14,8 @@ public:
     KSyntaxHighlightingWrapperPrivate(KSyntaxHighlightingWrapper* pPublic);
     virtual ~KSyntaxHighlightingWrapperPrivate();
 
+    bool setTextDocument(QTextDocument *textDocument);
+
     bool setDefinition(KSyntaxHighlighting::Definition def);
     KSyntaxHighlighting::Definition currentDefinition();
 

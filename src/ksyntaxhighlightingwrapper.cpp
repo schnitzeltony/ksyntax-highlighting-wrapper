@@ -19,6 +19,21 @@ KSyntaxHighlightingWrapperPrivate::~KSyntaxHighlightingWrapperPrivate()
 {
 }
 
+bool KSyntaxHighlightingWrapperPrivate::setTextDocument(QTextDocument *textDocument)
+{
+    bool highlighterChanged = false;
+    if(m_highlighter) {
+        delete m_highlighter;
+        m_highlighter = nullptr;
+        highlighterChanged = true;
+    }
+    if(textDocument) {
+        m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(textDocument);
+        highlighterChanged = true;
+    }
+    return highlighterChanged;
+}
+
 bool KSyntaxHighlightingWrapperPrivate::setDefinition(KSyntaxHighlighting::Definition def)
 {
     if(def.isValid()) {
@@ -87,16 +102,12 @@ KSyntaxHighlightingWrapper::~KSyntaxHighlightingWrapper()
 {
 }
 
-void KSyntaxHighlightingWrapper::setTextDocument(QObject *textDocument)
+void KSyntaxHighlightingWrapper::setTextDocument(QTextDocument *textDocument)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    // Should we handle multiple calls?
-    if(d->m_highlighter)
-        return;
+    if(d->setTextDocument(textDocument)) {
+        emit documentChanged();
 
-    QTextDocument* textDocumentCast = qobject_cast<QTextDocument *>(textDocument);
-    if(textDocumentCast) {
-        d->m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(textDocumentCast);
         // Did we receive setting at times we had no document?
         if(d->m_definitionNoHighlighter.isValid() && d->setDefinition(d->m_definitionNoHighlighter)) {
             emit definitionChanged();
@@ -110,7 +121,7 @@ void KSyntaxHighlightingWrapper::setTextDocument(QObject *textDocument)
     }
 }
 
-QObject *KSyntaxHighlightingWrapper::textDocument() const
+QTextDocument *KSyntaxHighlightingWrapper::textDocument() const
 {
     Q_D(const KSyntaxHighlightingWrapper);
     if(d->m_highlighter) {
@@ -121,17 +132,16 @@ QObject *KSyntaxHighlightingWrapper::textDocument() const
     }
 }
 
-void KSyntaxHighlightingWrapper::setQmlTextDocument(QObject *qmlTextDocument)
+void KSyntaxHighlightingWrapper::setQmlTextDocument(QQuickTextDocument *qmlTextDocument)
 {
-    QQuickTextDocument* qmlTextDocumentCast = qobject_cast<QQuickTextDocument *>(qmlTextDocument);
     Q_D(KSyntaxHighlightingWrapper);
-    d->m_quickTextDocument = qmlTextDocumentCast;
+    d->m_quickTextDocument = qmlTextDocument;
     if(qmlTextDocument) {
-        setTextDocument(qmlTextDocumentCast->textDocument());
+        setTextDocument(qmlTextDocument->textDocument());
     }
 }
 
-QObject *KSyntaxHighlightingWrapper::qmlTextDocument() const
+QQuickTextDocument *KSyntaxHighlightingWrapper::qmlTextDocument() const
 {
     Q_D(const KSyntaxHighlightingWrapper);
     return d->m_quickTextDocument;

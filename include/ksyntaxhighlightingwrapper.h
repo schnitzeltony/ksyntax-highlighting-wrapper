@@ -2,12 +2,10 @@
 #define KSYNTAX_HIGHLIGHTING_WRAPPER_H
 
 #include "ksyntaxhighlightingwrapper_export.h"
-#include <QObject>
+#include <QQuickTextDocument>
 
 
 QT_BEGIN_NAMESPACE
-class QTextDocument;
-class QQuickTextDocument;
 class KSyntaxHighlightingWrapperPrivate;
 
 // clang: be quiet
@@ -21,8 +19,8 @@ public:
     virtual ~KSyntaxHighlightingWrapper();
 
     // document
-    Q_PROPERTY(QObject* textDocument READ textDocument WRITE setTextDocument)
-    Q_PROPERTY(QObject* qmlTextDocument READ qmlTextDocument WRITE setQmlTextDocument)
+    Q_PROPERTY(QTextDocument *textDocument READ textDocument WRITE setTextDocument NOTIFY documentChanged)
+    Q_PROPERTY(QQuickTextDocument *qmlTextDocument READ qmlTextDocument WRITE setQmlTextDocument NOTIFY documentChanged)
 
     // access current definition
     Q_PROPERTY(QString definitionName READ definitionName WRITE setDefinitionName NOTIFY definitionChanged)
@@ -41,11 +39,11 @@ public:
     Q_PROPERTY(QStringList themeNames READ themeNames)
     Q_PROPERTY(QStringList themeNamesTranslated READ themeNamesTranslated)
 
-    void setTextDocument(QObject *textDocument);
-    QObject *textDocument() const;
+    void setTextDocument(QTextDocument *textDocument);
+    QTextDocument *textDocument() const;
 
-    void setQmlTextDocument(QObject *qmlTextDocument);
-    QObject *qmlTextDocument() const;
+    void setQmlTextDocument(QQuickTextDocument *qmlTextDocument);
+    QQuickTextDocument *qmlTextDocument() const;
 
     const QString definitionName();
     void setDefinitionName(const QString& definitionName);
@@ -62,6 +60,7 @@ public:
     const QStringList themeNamesTranslated() const;
 
 signals:
+    void documentChanged();
     void definitionChanged();
     void themeChanged();
 
