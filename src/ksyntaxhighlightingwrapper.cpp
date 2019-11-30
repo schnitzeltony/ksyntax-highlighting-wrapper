@@ -167,6 +167,16 @@ void KSyntaxHighlightingWrapper::setDefinitionName(const QString &definitionName
         emit definitionChanged();
 }
 
+const QStringList KSyntaxHighlightingWrapper::definitionNames() const
+{
+    Q_D(const KSyntaxHighlightingWrapper);
+    QStringList definitionNames;
+    for(auto definition : d->m_repository.definitions()) {
+        definitionNames.append(definition.name());
+    }
+    return definitionNames;
+}
+
 const QString KSyntaxHighlightingWrapper::themeName()
 {
     Q_D(KSyntaxHighlightingWrapper);

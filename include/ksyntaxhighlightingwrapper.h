@@ -29,6 +29,9 @@ public:
     Q_INVOKABLE void definitionForFileName(const QString &fileName);
     Q_INVOKABLE void definitionForMimeType(const QString &mimeType);
 
+    // available definitions
+    Q_PROPERTY(QStringList definitionNames READ definitionNames)
+
     // theme access
     Q_PROPERTY(QString themeName READ themeName WRITE setThemeName NOTIFY themeChanged)
     Q_PROPERTY(QString themeNameTranslated READ themeNameTranslated NOTIFY themeChanged)
@@ -46,6 +49,8 @@ public:
 
     const QString definitionName();
     void setDefinitionName(const QString& definitionName);
+
+    const QStringList definitionNames() const;
 
     const QString themeName();
     void setThemeName(const QString& themeName);
