@@ -102,6 +102,11 @@ KSyntaxHighlightingWrapper::~KSyntaxHighlightingWrapper()
 {
 }
 
+void KSyntaxHighlightingWrapper::registerQml()
+{
+    qmlRegisterType<KSyntaxHighlightingWrapper>("KSyntaxHighlighting", 1, 0, "KSyntaxHighlighting");
+}
+
 void KSyntaxHighlightingWrapper::setTextDocument(QTextDocument *textDocument)
 {
     Q_D(KSyntaxHighlightingWrapper);

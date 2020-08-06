@@ -11,12 +11,16 @@ class KSyntaxHighlightingWrapperPrivate;
 // clang: be quiet
 QT_WARNING_DISABLE_CLANG("-Wshadow-field")
 
+
 class KSYNTAXHIGHLIGHTINGWRAPPER_EXPORT KSyntaxHighlightingWrapper : public QObject
 {
   Q_OBJECT
 public:
     explicit KSyntaxHighlightingWrapper(QObject *parent = nullptr);
     virtual ~KSyntaxHighlightingWrapper();
+
+    // As name suggests: register for QML usage
+    static void registerQml();
 
     // document
     Q_PROPERTY(QTextDocument *textDocument READ textDocument WRITE setTextDocument NOTIFY documentChanged)
