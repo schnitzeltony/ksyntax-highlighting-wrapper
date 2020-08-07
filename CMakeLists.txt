@@ -23,6 +23,9 @@ find_package(Qt5 "5.12.0" COMPONENTS Core Quick CONFIG REQUIRED)
 # kde syntax-higlighting
 find_package(KF5SyntaxHighlighting REQUIRED)
 
+# keep global include path for sub projects
+set(GLOBAL_HEADER_DIR ${PROJECT_SOURCE_DIR}/include)
+
 add_subdirectory(src)
 
 # install public headers
