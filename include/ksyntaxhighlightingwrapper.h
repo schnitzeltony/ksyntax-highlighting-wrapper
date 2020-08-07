@@ -32,7 +32,7 @@ public:
     Q_INVOKABLE void definitionForMimeType(const QString &mimeType);
 
     // available definitions
-    Q_PROPERTY(QStringList definitionNames READ definitionNames)
+    Q_PROPERTY(QStringList definitionNames CONSTANT READ definitionNames)
 
     // theme access
     Q_PROPERTY(QString themeName READ themeName WRITE setThemeName NOTIFY themeChanged)
@@ -40,8 +40,8 @@ public:
     Q_PROPERTY(int themeNumber READ themeNumber WRITE setThemeNumber NOTIFY themeChanged)
 
     // available themes
-    Q_PROPERTY(QStringList themeNames READ themeNames)
-    Q_PROPERTY(QStringList themeNamesTranslated READ themeNamesTranslated)
+    Q_PROPERTY(QStringList themeNames CONSTANT READ themeNames)
+    Q_PROPERTY(QStringList themeNamesTranslated CONSTANT READ themeNamesTranslated)
 
     void setTextDocument(QTextDocument *textDocument);
     QTextDocument *textDocument() const;
