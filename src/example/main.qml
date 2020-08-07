@@ -9,9 +9,8 @@ ApplicationWindow {
     width: 800
     height: 600
     title: qsTr("Syntax Highlighting Example")
-
     header: ToolBar {
-        Material.primary: Material.backgroundColor
+        Material.primary: Material.buttonColor
         RowLayout {
             anchors.fill: parent
             Item { width: 5 }
