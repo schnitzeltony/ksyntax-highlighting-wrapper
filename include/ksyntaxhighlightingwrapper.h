@@ -28,8 +28,8 @@ public:
 
     // access current definition
     Q_PROPERTY(QString definitionName READ definitionName WRITE setDefinitionName NOTIFY definitionChanged)
-    Q_INVOKABLE void definitionForFileName(const QString &fileName);
-    Q_INVOKABLE void definitionForMimeType(const QString &mimeType);
+    Q_INVOKABLE void setDefinitionForFileName(const QString &fileName);
+    Q_INVOKABLE void setDefinitionForMimeType(const QString &mimeType);
 
     // available definitions
     Q_PROPERTY(QStringList definitionNames CONSTANT READ definitionNames)
@@ -43,6 +43,8 @@ public:
     Q_PROPERTY(QStringList themeNames CONSTANT READ themeNames)
     Q_PROPERTY(QStringList themeNamesTranslated CONSTANT READ themeNamesTranslated)
 
+
+    // implemetation for properties & invokables
     void setTextDocument(QTextDocument *textDocument);
     QTextDocument *textDocument() const;
 
