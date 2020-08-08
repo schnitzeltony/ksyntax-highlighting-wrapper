@@ -10,25 +10,35 @@ ApplicationWindow {
     height: 600
     title: qsTr("Syntax Highlighting Example")
     header: ToolBar {
-        Material.primary: Material.buttonColor
+        id: toolbar
+        readonly property real tmargins: 8
+        //Material.primary: Material.color(Material.Purple)
         RowLayout {
             anchors.fill: parent
-            Item { width: 5 }
-            Label { text: qsTr("Select syntax definition:") }
+            Label {
+                Layout.leftMargin: toolbar.tmargins
+                text: qsTr("Select syntax definition:")
+            }
             ComboBox {
                 id: comboDefinitons
-                editable: true
-                model: kSyntaxHighltighter.definitionNames
                 Layout.minimumWidth: 300
+                //model: kSyntaxHighltighter.definitionNames
+                model: [ // suggested are too many so hardcode few
+                    "None", "bash", "Bitbake", "C++", "CMake", "HTML", "JavaScript",
+                    "JSON", "Markdown", "Python", "QML"
+                ]
             }
             Item { Layout.fillWidth: true }
-            Item { width: 5 }
-            Label { text: qsTr("Select theme:") }
+            Label {
+                Layout.leftMargin: toolbar.tmargins
+                text: qsTr("Select theme:")
+            }
             ComboBox {
                 id: comboThemes
-                editable: true
+                Layout.leftMargin: toolbar.tmargins
+                Layout.rightMargin: toolbar.tmargins
+                Layout.minimumWidth: 180
                 model: kSyntaxHighltighter.themeNames
-                Layout.minimumWidth: 190
             }
         }
     }
@@ -42,8 +52,8 @@ ApplicationWindow {
             KSyntaxHighlighting {
                 id: kSyntaxHighltighter
                 qmlTextDocument: textArea.textDocument
-                themeNumber: comboThemes.currentIndex
-                definitionNumber: comboDefinitons.currentIndex
+                definitionName: comboDefinitons.currentText
+                themeName: comboThemes.currentText
             }
         }
     }
