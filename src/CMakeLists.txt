@@ -1,2 +1,4 @@
 add_subdirectory(lib)
-add_subdirectory(example)
+if(BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif(BUILD_EXAMPLE)
