@@ -23,7 +23,11 @@ KSyntaxHighlightingWrapperPrivate::~KSyntaxHighlightingWrapperPrivate()
 bool KSyntaxHighlightingWrapperPrivate::setTextDocument(QTextDocument *textDocument)
 {
     bool highlighterChanged = false;
+    // Just to remember: There is no need to connect/disconnect our signal
+    // definitionChanged - KSyntaxHighlighter calls rehighlight theme seems another
+    // story...
     if(m_highlighter) {
+        QObject::disconnect(q_ptr, &KSyntaxHighlightingWrapper::themeChanged, m_highlighter, &QSyntaxHighlighter::rehighlight);
         delete m_highlighter;
         m_highlighter = nullptr;
         highlighterChanged = true;
@@ -31,6 +35,7 @@ bool KSyntaxHighlightingWrapperPrivate::setTextDocument(QTextDocument *textDocum
     if(textDocument) {
         m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(textDocument);
         highlighterChanged = true;
+        QObject::connect(q_ptr, &KSyntaxHighlightingWrapper::themeChanged, m_highlighter, &QSyntaxHighlighter::rehighlight);
         m_highlighter->setDefinition(m_currentDefinition);
         m_highlighter->setTheme(m_currentTheme);
     }
