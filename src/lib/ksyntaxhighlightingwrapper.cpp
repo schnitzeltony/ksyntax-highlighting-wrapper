@@ -70,7 +70,7 @@ QQuickTextDocument *KSyntaxHighlightingWrapperPrivate::qmlTextDocument() const
 bool KSyntaxHighlightingWrapperPrivate::setDefinition(KSyntaxHighlighting::Definition def)
 {
     bool changed = false;
-    if(def.isValid()) {
+    if(def.isValid() || def == KSyntaxHighlighting::Definition() /* None is ok */) {
         if(def != m_currentDefinition) {
             m_currentDefinition = def;
             changed = true;
