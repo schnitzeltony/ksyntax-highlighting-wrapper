@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     ...
 ```
 
-An [example-application](src/example)
+An [example-application](src/example/main.qml)
 
 ![Screenshot_2020-08-08_23-10-36](https://user-images.githubusercontent.com/2571823/89720635-8e2f9a80-d9d4-11ea-89cd-4640c71ed12d.jpeg)
 
