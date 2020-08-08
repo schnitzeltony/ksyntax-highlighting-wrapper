@@ -33,7 +33,6 @@ bool KSyntaxHighlightingWrapperPrivate::setTextDocument(QTextDocument *textDocum
         highlighterChanged = true;
         m_highlighter->setDefinition(m_currentDefinition);
         m_highlighter->setTheme(m_currentTheme);
-
     }
     return highlighterChanged;
 }
@@ -120,6 +119,23 @@ const QStringList KSyntaxHighlightingWrapperPrivate::definitionNames() const
     return definitionNames;
 }
 
+int KSyntaxHighlightingWrapperPrivate::definitionNumber()
+{
+    return definitionNames().indexOf(definitionName());
+}
+
+bool KSyntaxHighlightingWrapperPrivate::setDefinitionNumber(const int definitionNumber)
+{
+    bool changed = false;
+    if(definitionNumber >= 0) {
+        QStringList names = definitionNames();
+        if(definitionNumber < names.count()) {
+            changed = setDefinitionName(names[definitionNumber]);
+        }
+    }
+    return changed;
+}
+
 bool KSyntaxHighlightingWrapperPrivate::setTheme(KSyntaxHighlighting::Theme theme)
 {
     bool changed = false;
@@ -167,10 +183,10 @@ int KSyntaxHighlightingWrapperPrivate::themeNumber()
 bool KSyntaxHighlightingWrapperPrivate::setThemeNumber(const int themeNumber)
 {
     bool changed = false;
-    QVector<KSyntaxHighlighting::Theme> themes = m_repository.themes();
-    if(themeNumber < themes.count()) {
-        if(setTheme(themes[themeNumber])) {
-            changed  = true;
+    if(themeNumber >= 0) {
+        QVector<KSyntaxHighlighting::Theme> themes = m_repository.themes();
+        if(themeNumber < themes.count()) {
+            changed = setTheme(themes[themeNumber]);
         }
     }
     return changed ;
@@ -270,6 +286,20 @@ void KSyntaxHighlightingWrapper::setDefinitionName(const QString &definitionName
 {
     Q_D(KSyntaxHighlightingWrapper);
     if(d->setDefinitionName(definitionName)) {
+        emit definitionChanged();
+    }
+}
+
+int KSyntaxHighlightingWrapper::definitionNumber()
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    return d->definitionNumber();
+}
+
+void KSyntaxHighlightingWrapper::setDefinitionNumber(const int definitionNumber)
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    if(d->setDefinitionNumber(definitionNumber)) {
         emit definitionChanged();
     }
 }

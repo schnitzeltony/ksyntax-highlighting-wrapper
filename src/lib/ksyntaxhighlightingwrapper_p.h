@@ -27,6 +27,8 @@ private:
     const QString definitionName();
     bool setDefinitionName(const QString& definitionName);
     const QStringList definitionNames() const;
+    int definitionNumber();
+    bool setDefinitionNumber(const int definitionNumber);
 
     KSyntaxHighlighting::Theme theme();
     bool setTheme(KSyntaxHighlighting::Theme theme);

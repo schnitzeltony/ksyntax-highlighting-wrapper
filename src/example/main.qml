@@ -42,8 +42,8 @@ ApplicationWindow {
             KSyntaxHighlighting {
                 id: kSyntaxHighltighter
                 qmlTextDocument: textArea.textDocument
-                themeName: comboThemes.currentText
-                definitionName: comboDefinitons.currentText
+                themeNumber: comboThemes.currentIndex
+                definitionNumber: comboDefinitons.currentIndex
             }
         }
     }

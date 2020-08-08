@@ -28,6 +28,7 @@ public:
 
     // access current definition
     Q_PROPERTY(QString definitionName READ definitionName WRITE setDefinitionName NOTIFY definitionChanged)
+    Q_PROPERTY(int definitionNumber READ definitionNumber WRITE setDefinitionNumber NOTIFY definitionChanged)
     Q_INVOKABLE void setDefinitionForFileName(const QString &fileName);
     Q_INVOKABLE void setDefinitionForMimeType(const QString &mimeType);
 
@@ -53,6 +54,8 @@ public:
 
     const QString definitionName();
     void setDefinitionName(const QString& definitionName);
+    int definitionNumber();
+    void setDefinitionNumber(const int definitionNumber);
 
     const QStringList definitionNames() const;
 
