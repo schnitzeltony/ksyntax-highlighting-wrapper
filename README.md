@@ -1,8 +1,8 @@
 ksyntax-highlighting-wrapper
 ============================
 
-ksyntax-highlighting-wrapper is a Q_Property wrapper for KDE's [KSyntaxHighlighting](https://api.kde.org/frameworks/syntax-highlighting/html/index.html).
-Adding syntax highligting to an application is as easy as:
+ksyntax-highlighting-wrapper is a Q_Property / QML wrapper for KDE's [KSyntaxHighlighting](https://api.kde.org/frameworks/syntax-highlighting/html/index.html).
+Adding syntax highligting to a QML-application is as easy as:
 
 1. In your main.cpp:
 
