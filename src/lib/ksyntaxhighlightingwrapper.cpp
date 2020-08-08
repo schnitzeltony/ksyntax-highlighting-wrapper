@@ -30,60 +30,52 @@ bool KSyntaxHighlightingWrapperPrivate::setTextDocument(QTextDocument *textDocum
     if(textDocument) {
         m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(textDocument);
         highlighterChanged = true;
+        m_highlighter->setDefinition(m_currentDefinition);
+        m_highlighter->setTheme(m_currentTheme);
+
     }
     return highlighterChanged;
 }
 
 bool KSyntaxHighlightingWrapperPrivate::setDefinition(KSyntaxHighlighting::Definition def)
 {
+    bool changed = false;
     if(def.isValid()) {
-        if(m_highlighter) {
-            if(def != m_highlighter->definition()) {
+        if(def != m_currentDefinition) {
+            m_currentDefinition = def;
+            changed = true;
+            if(m_highlighter) {
                 m_highlighter->setDefinition(def);
-                return true;
             }
-        }
-        else {
-            m_definitionNoHighlighter = def;
+
         }
     }
-    return false;
+    return changed;
 }
 
-KSyntaxHighlighting::Definition KSyntaxHighlightingWrapperPrivate::currentDefinition()
+KSyntaxHighlighting::Definition KSyntaxHighlightingWrapperPrivate::definition()
 {
-    if(m_highlighter) {
-        return m_highlighter->definition();
-    }
-    else {
-        return m_definitionNoHighlighter;
-    }
+    return m_currentDefinition;
 }
 
 bool KSyntaxHighlightingWrapperPrivate::setTheme(KSyntaxHighlighting::Theme theme)
 {
+    bool changed = false;
     if(theme.isValid()) {
-        if(m_highlighter) {
-            if(theme.name() != m_highlighter->theme().name()) {
+        if(theme.name() != m_currentTheme.name()) {
+            m_currentTheme = theme;
+            changed = true;
+            if(m_highlighter) {
                 m_highlighter->setTheme(theme);
-                return true;
             }
         }
-        else {
-            m_themeNoHighlighter = theme;
-        }
     }
-    return false;
+    return changed;
 }
 
-KSyntaxHighlighting::Theme KSyntaxHighlightingWrapperPrivate::curentTheme()
+KSyntaxHighlighting::Theme KSyntaxHighlightingWrapperPrivate::theme()
 {
-    if(m_highlighter) {
-        return m_highlighter->theme();
-    }
-    else {
-        return m_themeNoHighlighter;
-    }
+    return m_currentTheme;
 }
 
 // public
@@ -112,17 +104,6 @@ void KSyntaxHighlightingWrapper::setTextDocument(QTextDocument *textDocument)
     Q_D(KSyntaxHighlightingWrapper);
     if(d->setTextDocument(textDocument)) {
         emit documentChanged();
-
-        // Did we receive setting at times we had no document?
-        if(d->m_definitionNoHighlighter.isValid() && d->setDefinition(d->m_definitionNoHighlighter)) {
-            emit definitionChanged();
-        }
-        d->m_definitionNoHighlighter = KSyntaxHighlighting::Definition();
-
-        if(d->m_themeNoHighlighter.isValid() && d->setTheme(d->m_themeNoHighlighter)) {
-            emit themeChanged();
-        }
-        d->m_themeNoHighlighter = KSyntaxHighlighting::Theme();
     }
 }
 
@@ -171,7 +152,7 @@ void KSyntaxHighlightingWrapper::definitionForMimeType(const QString &mimeType)
 const QString KSyntaxHighlightingWrapper::definitionName()
 {
     Q_D(KSyntaxHighlightingWrapper);
-    return d->currentDefinition().name();
+    return d->definition().name();
 }
 
 void KSyntaxHighlightingWrapper::setDefinitionName(const QString &definitionName)
@@ -195,7 +176,7 @@ const QStringList KSyntaxHighlightingWrapper::definitionNames() const
 const QString KSyntaxHighlightingWrapper::themeName()
 {
     Q_D(KSyntaxHighlightingWrapper);
-    return d->curentTheme().name();
+    return d->theme().name();
 }
 
 void KSyntaxHighlightingWrapper::setThemeName(const QString &themeName)
@@ -210,7 +191,7 @@ void KSyntaxHighlightingWrapper::setThemeName(const QString &themeName)
 const QString KSyntaxHighlightingWrapper::themeNameTranslated()
 {
     Q_D(KSyntaxHighlightingWrapper);
-    return d->curentTheme().translatedName();
+    return d->theme().translatedName();
 }
 
 int KSyntaxHighlightingWrapper::themeNumber()
@@ -219,7 +200,7 @@ int KSyntaxHighlightingWrapper::themeNumber()
     int themeNum = -1;
     QVector<KSyntaxHighlighting::Theme> themes = d->m_repository.themes();
     for(int iTheme=0; iTheme<themes.size(); iTheme++) {
-        if(themes[iTheme].name() == d->curentTheme().name()) {
+        if(themes[iTheme].name() == d->theme().name()) {
             themeNum = iTheme;
             break;
         }

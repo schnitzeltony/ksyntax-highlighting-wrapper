@@ -17,10 +17,10 @@ public:
     bool setTextDocument(QTextDocument *textDocument);
 
     bool setDefinition(KSyntaxHighlighting::Definition def);
-    KSyntaxHighlighting::Definition currentDefinition();
+    KSyntaxHighlighting::Definition definition();
 
     bool setTheme(KSyntaxHighlighting::Theme theme);
-    KSyntaxHighlighting::Theme curentTheme();
+    KSyntaxHighlighting::Theme theme();
 
     static KSyntaxHighlighting::Repository m_repository;
     KSyntaxHighlighting::SyntaxHighlighter *m_highlighter;
@@ -28,9 +28,10 @@ public:
     // Just in case...
     QQuickTextDocument *m_quickTextDocument;
 
-    // Keep as long as there is no document
-    KSyntaxHighlighting::Definition m_definitionNoHighlighter;
-    KSyntaxHighlighting::Theme m_themeNoHighlighter;
+    // m_highlighter has them but m_highlighter can be nullptr
+    // so keep these locally
+    KSyntaxHighlighting::Definition m_currentDefinition;
+    KSyntaxHighlighting::Theme m_currentTheme;
 
     KSyntaxHighlightingWrapper *q_ptr;
 };
