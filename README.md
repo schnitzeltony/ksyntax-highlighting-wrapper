@@ -4,7 +4,12 @@ ksyntax-highlighting-wrapper
 ksyntax-highlighting-wrapper is a Q_Property / QML wrapper for KDE's [KSyntaxHighlighting](https://api.kde.org/frameworks/syntax-highlighting/html/index.html).
 
 ----------------------------------------------
-Using this libray to have syntax-highligting in your QML-project is just a matter of adding few lines::
+To use this project do
+
+1. Download it - either git clone or release tarball
+2. Build it and install it to a location cmake can find it
+
+In your project add:
 
 1. In CMakeList.txt:
 ```cmake
@@ -36,7 +41,9 @@ int main(int argc, char *argv[])
 ```
 3. In QML:
 ```QML
-    ...
+...
+import KSyntaxHighlighting 1.0
+...
     TextArea {
         id: textArea
         KSyntaxHighlighting {
@@ -45,7 +52,7 @@ int main(int argc, char *argv[])
             themeName: "Default"
         }
     }
-    ...
+...
 ```
 
 ----------------------------------------------
