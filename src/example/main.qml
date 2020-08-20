@@ -47,6 +47,7 @@ ApplicationWindow {
         TextArea {
             id: textArea
             selectByMouse: true
+            font.family: "Source Code Pro"
             mouseSelectionMode: TextEdit.SelectWords
             placeholderText: qsTr("Drop some text here and select a matching syntax definition")
             KSyntaxHighlighting {
