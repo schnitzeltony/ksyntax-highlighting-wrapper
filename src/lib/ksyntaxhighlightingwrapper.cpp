@@ -12,6 +12,7 @@ static KSyntaxHighlighting::Repository m_repository;
 KSyntaxHighlightingWrapperPrivate::KSyntaxHighlightingWrapperPrivate(KSyntaxHighlightingWrapper* pPublic) :
     m_highlighter(nullptr),
     m_quickTextDocument(nullptr),
+    m_textDocument(nullptr),
     q_ptr(pPublic)
 {
 }
@@ -23,32 +24,26 @@ KSyntaxHighlightingWrapperPrivate::~KSyntaxHighlightingWrapperPrivate()
 bool KSyntaxHighlightingWrapperPrivate::setTextDocument(QTextDocument *textDocument)
 {
     bool highlighterChanged = false;
-    // Just to remember: There is no need to connect/disconnect our signal
-    // definitionChanged - KSyntaxHighlighter calls rehighlight theme seems another
-    // story...
-    if(m_highlighter) {
-        QObject::disconnect(q_ptr, &KSyntaxHighlightingWrapper::themeChanged, m_highlighter, &QSyntaxHighlighter::rehighlight);
-        delete m_highlighter;
-        m_highlighter = nullptr;
-        highlighterChanged = true;
-    }
-    if(textDocument) {
-        m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(textDocument);
-        highlighterChanged = true;
-        QObject::connect(q_ptr, &KSyntaxHighlightingWrapper::themeChanged, m_highlighter, &QSyntaxHighlighter::rehighlight);
-        m_highlighter->setDefinition(m_currentDefinition);
-        m_highlighter->setTheme(m_currentTheme);
+    if(m_textDocument != textDocument) {
+        m_textDocument = textDocument;
+        if(m_highlighter) {
+            delete m_highlighter;
+            m_highlighter = nullptr;
+            highlighterChanged = true;
+        }
+        if(textDocument) {
+            m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(textDocument);
+            highlighterChanged = true;
+            m_highlighter->setTheme(m_currentTheme);
+            m_highlighter->setDefinition(m_currentDefinition);
+        }
     }
     return highlighterChanged;
 }
 
 QTextDocument *KSyntaxHighlightingWrapperPrivate::textDocument() const
 {
-    QTextDocument *document = nullptr;
-    if(m_highlighter) {
-        document = m_highlighter->document();
-    }
-    return document;
+    return m_textDocument;
 }
 
 bool KSyntaxHighlightingWrapperPrivate::setQmlTextDocument(QQuickTextDocument *qmlTextDocument)
@@ -80,7 +75,12 @@ bool KSyntaxHighlightingWrapperPrivate::setDefinition(KSyntaxHighlighting::Defin
             m_currentDefinition = def;
             changed = true;
             if(m_highlighter) {
-                m_highlighter->setDefinition(def);
+                // Although ksyntaxhighlighter calls rehighlight, the document
+                // is not re-rendered. So choose the brute force way: Unload
+                // and reload highlighter
+                QTextDocument *currDocument = m_textDocument;
+                setTextDocument(nullptr);
+                setTextDocument(currDocument);
             }
         }
     }
@@ -149,7 +149,12 @@ bool KSyntaxHighlightingWrapperPrivate::setTheme(KSyntaxHighlighting::Theme them
             m_currentTheme = theme;
             changed = true;
             if(m_highlighter) {
-                m_highlighter->setTheme(theme);
+                // ksyntaxhighlighter does not call rehighlight due to it's
+                // design. So choose the sam brute force way as setDefinition
+                // does: Unload and reload highlighter
+                QTextDocument *currDocument = m_textDocument;
+                setTextDocument(nullptr);
+                setTextDocument(currDocument);
             }
         }
     }

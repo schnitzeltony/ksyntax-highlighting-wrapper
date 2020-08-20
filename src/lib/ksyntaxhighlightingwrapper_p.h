@@ -44,6 +44,8 @@ private:
 
     // We have to keep for getter
     QQuickTextDocument *m_quickTextDocument;
+    // For brute force redraw hack
+    QTextDocument *m_textDocument;
 
     // m_highlighter has them but m_highlighter can be nullptr
     // so keep these locally. We keep default from KSyntaxHighlighting:
