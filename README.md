@@ -58,7 +58,7 @@ import KSyntaxHighlighting 1.0
 ----------------------------------------------
 An [example-application](src/example/main.qml)
 
-![Screenshot_2020-08-08_23-10-36](https://user-images.githubusercontent.com/2571823/89720635-8e2f9a80-d9d4-11ea-89cd-4640c71ed12d.jpeg)
+![Screenshot_2020-08-23_16-01-08](https://user-images.githubusercontent.com/2571823/90980154-fac0a280-e559-11ea-9054-25c9c3678083.png)
 
 is build optionally by adding ```-DBUILD_EXAMPLE``` to cmake's commandline. To see the library in action check also
 [qmlarkdown](https://github.com/schnitzeltony/qmlarkdown).
