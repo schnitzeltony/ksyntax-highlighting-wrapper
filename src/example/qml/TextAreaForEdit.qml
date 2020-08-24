@@ -2,19 +2,29 @@ import QtQuick 2.12
 import QtQuick.Controls 2.12
 
 TextArea {
-    // This propety is set by ScrollViewClassic
-    property real visibleLines: 20
+    id: sourceCodeArea
+
+    // expose currLineBar so behaviour can be changed (opacity/color/visibility)
+    property alias currLineBar: currLineBar
+
     // Some useful defaults when editing code
     selectByMouse: true
     mouseSelectionMode: TextEdit.SelectWords
     background: null // avoid underline on Material design
 
-    property int currPosInLine: 0
-    property bool inPageUpDown: false
+    // This property is set by ScrollViewClassic
+    property real visibleLines: 20
+
+    // private keepers
+    Item {
+        id: privateStateContainer
+        property int currPosInLine: 0
+        property bool inPageUpDown: false
+    }
 
     // Page up/down handler: Set new cursor position
     function calcPagePageDown(up) {
-        inPageUpDown = true
+        privateStateContainer.inPageUpDown = true
         var linesToMove = visibleLines
         var workLineStartPos = text.lastIndexOf("\n", cursorPosition-1) + 1
         if(up) {
@@ -46,23 +56,28 @@ TextArea {
         else if(text[targetLineEnd] === '\r') {
             targetLineEnd--
         }
-        if(workLineStartPos + currPosInLine > targetLineEnd) {
+        if(workLineStartPos + privateStateContainer.currPosInLine > targetLineEnd) {
+            // current x position exeeds line length of current line -> end
             cursorPosition = targetLineEnd
         }
         else {
-            cursorPosition = workLineStartPos + currPosInLine
+            // move to current x position in line
+            cursorPosition = workLineStartPos + privateStateContainer.currPosInLine
         }
-        inPageUpDown = false
+        privateStateContainer.inPageUpDown = false
     }
+
+    // keep current x in current line (and don't let pag up/down ruin that position)
     onCursorPositionChanged: {
-        if(!inPageUpDown) {
+        if(!privateStateContainer.inPageUpDown) {
             var curLineStartPos = text.lastIndexOf("\n", cursorPosition-1) + 1
-            currPosInLine = cursorPosition - curLineStartPos
+            privateStateContainer.currPosInLine = cursorPosition - curLineStartPos
         }
     }
 
+    // fire handler for page up/down
     Keys.onReleased: {
-        console.info(visibleLines)
+        //console.info(visibleLines)
         switch(event.key) {
         case Qt.Key_PageDown:
             calcPagePageDown(false)
@@ -71,5 +86,15 @@ TextArea {
             calcPagePageDown(true)
             break;
         }
+    }
+    // draw box for current line
+    Rectangle {
+        id: currLineBar
+        y: sourceCodeArea.cursorRectangle.y
+        height: sourceCodeArea.cursorRectangle.height
+        width: sourceCodeArea.width
+        anchors.left: sourceCodeArea.left
+        opacity: 0.1
+        color: "blue"
     }
 }
