@@ -6,7 +6,7 @@ Flickable {
     // Interface
     // Expose scroll bar width so it can be modified
     property real scrollBarWidth: 10
-    // Set this property to TextArea { .. } or better TextAreaForEdit { .. }
+    // Set this property to TextAreaForEdit { .. }
     property var textArea
 
     FontMetrics {
@@ -34,7 +34,7 @@ Flickable {
     }
     ScrollBar.horizontal: ScrollBar {
         anchors.bottom: parent.bottom
-        width: flickableForText.scrollBarWidth
+        height: flickableForText.scrollBarWidth
         orientation: Qt.Horizontal
         policy: textArea.paintedWidth > flickableForText.visibleArea.heightRatio * flickableForText.width ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
     }

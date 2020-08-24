@@ -95,6 +95,6 @@ TextArea {
         width: sourceCodeArea.width
         anchors.left: sourceCodeArea.left
         opacity: 0.1
-        color: "blue"
+        color: "grey"
     }
 }
