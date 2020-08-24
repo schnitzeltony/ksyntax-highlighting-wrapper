@@ -37,8 +37,8 @@ target_include_directories(KSyntaxHighlightingWrapper
 # additional compiler options
 target_compile_options(KSyntaxHighlightingWrapper PRIVATE -Wall)
 
-# some target magic added by qtcreator
-target_compile_definitions(KSyntaxHighlightingWrapper PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
+# add QT_QML_DEBUG for debug-config
+target_compile_definitions(KSyntaxHighlightingWrapper PRIVATE $<$<CONFIG:Debug>:QT_QML_DEBUG>)
 
 target_link_libraries(KSyntaxHighlightingWrapper
     PRIVATE
