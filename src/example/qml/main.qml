@@ -43,13 +43,13 @@ ApplicationWindow {
             }
         }
     }
-    ScrollView {
+    ScrollViewClassic {
+        id: scrollClassic
         anchors.fill: parent
-        TextArea {
+        textArea: TextAreaForEdit {
             id: textArea
-            selectByMouse: true
             font.family: "Source Code Pro"
-            mouseSelectionMode: TextEdit.SelectWords
+            //font.pointSize: 8
             placeholderText: qsTr("Drop some text here and select a matching syntax definition")
             KSyntaxHighlighting {
                 id: kSyntaxHighltighter
