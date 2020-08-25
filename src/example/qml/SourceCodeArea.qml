@@ -95,7 +95,7 @@ Flickable {
             // position of target line
 
             // Try to set vertical offset for qt-creatorish big step (next page up/down)
-            if(qtCreatorUpDownMode) {
+            if(qtCreatorUpDownMode && lineCount >= fontMetrics.visibleLines) {
                 // Wide jump was sucessful -> reset offset
                 if(offsetTried && linesToMove === 0) {
                     privateStateContainer.linesPageUpDownOffset = 0
@@ -148,7 +148,7 @@ Flickable {
                 // onCursorRectangleChanged is fired twice:
                 // 2. change of cursorPosition here
                 // 1. flickableForText.contentY change (in onCursorRectangleChanged below)
-                privateStateContainer.inPageUpDownYStep = 2
+                privateStateContainer.inPageUpDownYStep = lineCount >= fontMetrics.visibleLines ? 2 : 1
                 cursorPosition = newCursorPos
             }
         }
