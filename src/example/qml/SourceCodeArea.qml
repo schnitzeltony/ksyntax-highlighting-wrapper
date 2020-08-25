@@ -3,25 +3,27 @@ import QtQuick.Controls 2.12
 
 Flickable {
     id: flickableForText
+    // convenient / setup properties:
+    // Qt-Creator page up/down mode (first big step option):
+    // Advantage: paging up and down documents passes the same positions
+    property bool qtCreatorUpDownMode: true
+    // Scroolbar helpers might be helpful outside (symmetrical causes binding loop -> let vBar appear earlier)
+    property bool vBarVisible: sourceCodeArea.paintedHeight + scrollBarWidth > flickableForText.height
+    property bool hBarVisible: sourceCodeArea.paintedWidth + sourceCodeArea.rightPadding > flickableForText.width
 
     // Expose internals so they can be modified from outside
     property alias textArea: sourceCodeArea
     property real scrollBarWidth: 12
     property alias currLineBar: currLineBar
-    // Qt-Creator first big step option:
-    // Advantage: paging up and down documents passes the same positions
-    property bool qtCreatorUpDownMode: true
+    property alias vScrollBar: vBar
+    property alias hScrollBar: hBar
 
-    // Scroolbar helpers might be helpful outside (symmetrical causes binding loop -> let vBar appear earlier)
-    property bool vBarVisible: sourceCodeArea.paintedHeight + scrollBarWidth > flickableForText.height
-    property bool hBarVisible: sourceCodeArea.paintedWidth + sourceCodeArea.rightPadding > flickableForText.width
-
+    // Internal / 'private' types/bindings...
     onQtCreatorUpDownModeChanged: {
         if(!qtCreatorUpDownMode) {
             privateStateContainer.linesPageUpDownOffset = 0
         }
     }
-
     // private keepers
     Item {
         id: privateStateContainer
@@ -52,13 +54,12 @@ Flickable {
         rightInset: 0
         rightPadding: vBarVisible ? scrollBarWidth: 0
 
-
         // Page up/down handler: Set new cursor position
         function calcPagePageDown(up) {
             var linesToMove = fontMetrics.visibleLines
-            // Background: If user moves page up to top position, the next page
-            // down jumps down line count screen size + offset to keep vertical
-            // positions before starting up/down session
+            // qt-creator mode: If user moves page up to top position, the next
+            // page down jumps down line count screen size + offset to keep
+            // vertical positions before starting up/down session
             var offsetTried = false
             if(up && privateStateContainer.linesPageUpDownOffset < 0) {
                 linesToMove -= privateStateContainer.linesPageUpDownOffset
@@ -70,6 +71,7 @@ Flickable {
                 offsetTried = true
             }
             var workLineStartPos = text.lastIndexOf("\n", cursorPosition-1) + 1
+            // traverse lines up/down
             if(up) {
                 while(linesToMove > 0 && workLineStartPos > 0) {
                     // calc start position one line up
@@ -89,41 +91,43 @@ Flickable {
                     linesToMove--
                 }
             }
-            // here workLineStartPos is on first position of our target line
+            // Note: at this point workLineStartPos points to most left
+            // position of target line
 
-            // qt-creatorish first big step??
+            // Try to set vertical offset for qt-creatorish big step (next page up/down)
             if(qtCreatorUpDownMode) {
-                // Was a wide jump sucessful?
+                // Wide jump was sucessful -> reset offset
                 if(offsetTried && linesToMove === 0) {
                     privateStateContainer.linesPageUpDownOffset = 0
                 }
-                // We did not a full screen jump (and did not try a far jump)
+                // We did not a full screen jump and did not try a far jump yet
                 else if(linesToMove !== 0 && !offsetTried) {
                     // If not done already: Keep offset for far jump
                     if(up) {
                         // Do not overwrite value of same direction (multiple page up on top line)
                         if(privateStateContainer.linesPageUpDownOffset <= 0) {
-                            // positive offset for next down
-                            privateStateContainer.linesPageUpDownOffset = fontMetrics.visibleLines - linesToMove
+                            // positive offset for next page down
+                            privateStateContainer.linesPageUpDownOffset =
+                                    fontMetrics.visibleLines - linesToMove
                         }
                     }
                     else {
                         // Do not overwrite value of same direction (multiple page down on bottom line)
                         if(privateStateContainer.linesPageUpDownOffset >= 0) {
-                            // negative offset for next up
-                            privateStateContainer.linesPageUpDownOffset = linesToMove - fontMetrics.visibleLines
+                            // negative offset for next page up
+                            privateStateContainer.linesPageUpDownOffset =
+                                    linesToMove - fontMetrics.visibleLines
                         }
                     }
                 }
             }
-
             // Horizontal cursor alignment:
-            // check if we can keep position in line
+            // check if line is long enough to keep position
             var targetLineEnd = text.indexOf("\n", workLineStartPos)
             if(targetLineEnd === -1) {
                 targetLineEnd = text.length
             }
-            // Windows \r\n
+            // Windows \r\n?
             else if(text[targetLineEnd] === '\r') {
                 targetLineEnd--
             }
@@ -141,9 +145,9 @@ Flickable {
             // Set new cursor position
             if(newCursorPos !== oldCursorPos) {
                 privateStateContainer.inPageUpDownX = true
-                // onCursorRectangleChanged is fired twice
-                // 2. Change of cursor position
-                // 1. flickableForText.contentY change (in onCursorRectangleChanged)
+                // onCursorRectangleChanged is fired twice:
+                // 2. change of cursorPosition here
+                // 1. flickableForText.contentY change (in onCursorRectangleChanged below)
                 privateStateContainer.inPageUpDownYStep = 2
                 cursorPosition = newCursorPos
             }
@@ -158,7 +162,7 @@ Flickable {
         }
         onCursorRectangleChanged: {
             if(privateStateContainer.inPageUpDownYStep <= 1) {
-                // keep cursor y in textarea for next up/down
+                // keep cursor y in textarea for next page up/down
                 // 0. normal move / no page up/down
                 // 1. after vertical flicking (see else{..} below)
                 privateStateContainer.currYCursor = sourceCodeArea.cursorRectangle.y
@@ -167,12 +171,12 @@ Flickable {
                     privateStateContainer.linesPageUpDownOffset = 0
                 }
                 else {
-                    // page up/down fire is over
+                    // page up/down fire is over here
                     privateStateContainer.inPageUpDownYStep = 0
                 }
             }
-            // Now that cursor is on position move cursor's vertical display
-            // position to where is before page up/down
+            // Now that cursor is on new position, move cursor's vertical
+            // display position (where it was before page up/down)
             else {
                 var newContentY = flickableForText.contentY + sourceCodeArea.cursorRectangle.y - privateStateContainer.currYCursor
                 var maxContentY = sourceCodeArea.paintedHeight - flickableForText.height + (vBarVisible ? scrollBarWidth : 0)
@@ -191,7 +195,7 @@ Flickable {
                 privateStateContainer.inPageUpDownYStep = 1
             }
         }
-        // fire handler for page up/down
+        // Page up/down: fire handler
         Keys.onReleased: {
             switch(event.key) {
             case Qt.Key_PageDown:
@@ -202,28 +206,34 @@ Flickable {
                 break;
             }
         }
-        // draw box for current line
+        // Draw box around current line
         Rectangle {
             id: currLineBar
             y: sourceCodeArea.cursorRectangle.y
             height: sourceCodeArea.cursorRectangle.height
-            width: sourceCodeArea.width
             anchors.left: sourceCodeArea.left
+            anchors.right: sourceCodeArea.right
+            anchors.rightMargin: sourceCodeArea.rightPadding
             opacity: 0.1
             color: "grey"
         }
     }
-
+    // We define an oldschool default policy:
+    // * scrollbars appeaer as soon contents exceed visible area without further ado
+    // * they don't dissapear after a short while.
+    // Modern users that prefer other behaviour can rebind e.g:
+    //   vScrollBar.policy: ScrollBar.AsNeeded
     ScrollBar.vertical: ScrollBar {
         id: vBar
         anchors.right: parent.right
-        width: flickableForText.scrollBarWidth
+        width: scrollBarWidth
         orientation: Qt.Vertical
         policy: vBarVisible ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
     }
     ScrollBar.horizontal: ScrollBar {
+        id: hBar
         anchors.bottom: parent.bottom
-        height: flickableForText.scrollBarWidth
+        height: scrollBarWidth
         orientation: Qt.Horizontal
         policy: hBarVisible ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
     }
