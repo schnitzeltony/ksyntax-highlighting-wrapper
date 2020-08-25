@@ -7,6 +7,8 @@ Flickable {
     // Qt-Creator page up/down mode (first big step option):
     // Advantage: paging up and down documents passes the same positions
     property bool qtCreatorUpDownMode: true
+    // page up @ top / page down @ bottom flicker value
+    property int noopFlickerValue: 500
     // Scroolbar helpers might be helpful outside (symmetrical causes binding loop -> let vBar appear earlier)
     property bool vBarVisible: sourceCodeArea.paintedHeight + scrollBarWidth > flickableForText.height
     property bool hBarVisible: sourceCodeArea.paintedWidth + sourceCodeArea.rightPadding > flickableForText.width
@@ -56,11 +58,22 @@ Flickable {
 
         // Page up/down handler: Set new cursor position
         function calcPagePageDown(up) {
-            var linesToMove = fontMetrics.visibleLines
+            // check for noop page up @ top / page down @ bottom
+            // and add some fun...
+            var workLineStartPos = text.lastIndexOf("\n", cursorPosition-1) + 1
+            if(up && workLineStartPos === 0) {
+                flickableForText.flick(0, noopFlickerValue)
+                return
+            }
+            else if(!up && text.indexOf("\n", workLineStartPos) == -1) {
+                flickableForText.flick(0, -noopFlickerValue)
+                return
+            }
             // qt-creator mode: If user moves page up to top position, the next
             // page down jumps down line count screen size + offset to keep
             // vertical positions before starting up/down session
             var offsetTried = false
+            var linesToMove = fontMetrics.visibleLines
             if(up && privateStateContainer.linesPageUpDownOffset < 0) {
                 linesToMove -= privateStateContainer.linesPageUpDownOffset
                 offsetTried = true
@@ -70,7 +83,6 @@ Flickable {
                 linesToMove += privateStateContainer.linesPageUpDownOffset
                 offsetTried = true
             }
-            var workLineStartPos = text.lastIndexOf("\n", cursorPosition-1) + 1
             // traverse lines up/down
             if(up) {
                 while(linesToMove > 0 && workLineStartPos > 0) {
