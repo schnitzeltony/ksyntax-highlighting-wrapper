@@ -43,8 +43,6 @@ Flickable {
 
         // Page up/down handler: Set new cursor position
         function calcPagePageDown(up) {
-            privateStateContainer.inPageUpDownX = true
-            privateStateContainer.inPageUpDownY = true
             var linesToMove = fontMetrics.visibleLines
             var workLineStartPos = text.lastIndexOf("\n", cursorPosition-1) + 1
             if(up) {
@@ -76,16 +74,22 @@ Flickable {
             else if(text[targetLineEnd] === '\r') {
                 targetLineEnd--
             }
+            var oldCursorPos = cursorPosition
+            var newCursorPos = cursorPosition
             if(workLineStartPos + privateStateContainer.currPosInLine > targetLineEnd) {
-                // current x position exeeds line length of current line -> end
-                cursorPosition = targetLineEnd
+                // current x position exceeds line length of current line -> end
+                newCursorPos = targetLineEnd
             }
             else {
                 // move to current x position in line
-                cursorPosition = workLineStartPos + privateStateContainer.currPosInLine
+                newCursorPos = workLineStartPos + privateStateContainer.currPosInLine
+            }
+            if(newCursorPos !== oldCursorPos) {
+                privateStateContainer.inPageUpDownX = true
+                privateStateContainer.inPageUpDownY = true
+                cursorPosition = newCursorPos
             }
         }
-
         onCursorPositionChanged: {
             // keep x in current line (and don't let page up/down ruin that position)
             if(!privateStateContainer.inPageUpDownX) {
@@ -95,19 +99,28 @@ Flickable {
             privateStateContainer.inPageUpDownX = false
         }
         onCursorRectangleChanged: {
-            // kepp cursor y
+            // keep cursor y
             if(!privateStateContainer.inPageUpDownY) {
                 privateStateContainer.currYCursor = sourceCodeArea.cursorRectangle.y
             }
             // Now that cursor is on position move vertical
             else {
-                flickableForText.contentY += sourceCodeArea.cursorRectangle.y - privateStateContainer.currYCursor
+                var newContentY = flickableForText.contentY + sourceCodeArea.cursorRectangle.y - privateStateContainer.currYCursor
+                var maxContentY = sourceCodeArea.paintedHeight - flickableForText.height + (vBarVisible ? scrollBarWidth : 0)
+                if(newContentY < 0) {
+                    flickableForText.contentY = 0
+                }
+                else if(newContentY > maxContentY) {
+                    flickableForText.contentY = maxContentY
+                }
+                else {
+                    flickableForText.contentY = newContentY
+                }
             }
             privateStateContainer.inPageUpDownY = false
         }
         // fire handler for page up/down
         Keys.onReleased: {
-            //console.info(fontMetrics.visibleLines)
             switch(event.key) {
             case Qt.Key_PageDown:
                 calcPagePageDown(false)
