@@ -43,20 +43,18 @@ ApplicationWindow {
             }
         }
     }
-    ScrollViewClassic {
-        id: scrollClassic
+    SourceCodeArea {
+        id: sourceCodeArea
         anchors.fill: parent
-        textArea: TextAreaForEdit {
-            id: textArea
-            font.family: "Source Code Pro"
-            //font.pointSize: 8
-            placeholderText: qsTr("Drop some text here and select a matching syntax definition")
-            KSyntaxHighlighting {
-                id: kSyntaxHighltighter
-                qmlTextDocument: textArea.textDocument
-                definitionName: comboDefinitons.currentText
-                themeName: comboThemes.currentText
-            }
+        textArea.focus: true
+        textArea.font.family: "Source Code Pro"
+        //textArea.font.pointSize: 8
+        textArea.placeholderText: qsTr("Drop some text here and select a matching syntax definition")
+        KSyntaxHighlighting {
+            id: kSyntaxHighltighter
+            qmlTextDocument: sourceCodeArea.textArea.textDocument
+            definitionName: comboDefinitons.currentText
+            themeName: comboThemes.currentText
         }
     }
 }
