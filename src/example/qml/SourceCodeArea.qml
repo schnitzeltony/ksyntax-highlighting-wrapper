@@ -58,11 +58,16 @@ Flickable {
         rightInset: 0
         rightPadding: vBarDynWidth
 
+        // tiny helpers
+        function findFirstPosInLine(position) {
+            return text.lastIndexOf("\n", position-1) + 1
+        }
+
         // Page up/down handler: Set new cursor position
         function calcPagePageDown(up) {
             // check for noop page up @ top / page down @ bottom
             // and add some fun...
-            var workLineStartPos = text.lastIndexOf("\n", cursorPosition-1) + 1
+            var workLineStartPos = findFirstPosInLine(cursorPosition)
             var noopFlick = 0
             if(up && workLineStartPos === 0) {
                 noopFlick = noopFlickerValue
@@ -94,7 +99,7 @@ Flickable {
             if(up) {
                 while(linesToMove > 0 && workLineStartPos > 0) {
                     // calc start position one line up
-                    workLineStartPos = text.lastIndexOf("\n", workLineStartPos-2) + 1
+                    workLineStartPos = findFirstPosInLine(workLineStartPos-1)
                     linesToMove--
                 }
             }
@@ -174,7 +179,7 @@ Flickable {
         onCursorPositionChanged: {
             // keep x in current line (and don't let page up/down ruin that position)
             if(!privateStateContainer.inPageUpDownX) {
-                var curLineStartPos = text.lastIndexOf("\n", cursorPosition-1) + 1
+                var curLineStartPos = findFirstPosInLine(cursorPosition)
                 privateStateContainer.currPosInLine = cursorPosition - curLineStartPos
             }
             privateStateContainer.inPageUpDownX = false
