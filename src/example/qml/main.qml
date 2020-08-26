@@ -21,6 +21,7 @@ ApplicationWindow {
             }
             ComboBox {
                 id: comboDefinitons
+                focusPolicy: Qt.NoFocus
                 Layout.minimumWidth: 300
                 //model: kSyntaxHighltighter.definitionNames
                 model: [ // suggested are too many so hardcode few
@@ -35,6 +36,7 @@ ApplicationWindow {
             }
             ComboBox {
                 id: comboThemes
+                focusPolicy: Qt.NoFocus
                 Layout.leftMargin: toolbar.tmargins
                 Layout.rightMargin: toolbar.tmargins
                 Layout.minimumWidth: 180
