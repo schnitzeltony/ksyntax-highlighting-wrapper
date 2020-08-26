@@ -196,7 +196,7 @@ Flickable {
             // display position (where it was before page up/down)
             else {
                 var newContentY = flickableForText.contentY + sourceCodeArea.cursorRectangle.y - privateStateContainer.currYCursor
-                var maxContentY = sourceCodeArea.paintedHeight - flickableForText.height + (vBarVisible ? scrollBarWidth : 0)
+                var maxContentY = sourceCodeArea.paintedHeight - flickableForText.height + (hBarVisible ? scrollBarWidth : 0)
                 // avoid overshoot top
                 if(newContentY < 0) {
                     flickableForText.contentY = 0
