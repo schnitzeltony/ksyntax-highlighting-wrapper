@@ -10,16 +10,16 @@ Flickable {
     // signal user that key operation exceeds document's limits by flicking
     // set to 0 to disable this function
     property int flickerValueKeyBeyondLimit: 500
-    // Scroolbar helpers might be helpful outside (symmetrical terms for
+    property real scrollBarWidth: 12.0
+    // Scrollbar helpers might be useful outside (symmetrical terms for
     // vBarVisible/hBarVisible cause binding loop -> let vBar appear earlier)
-    property bool vBarVisible: sourceCodeArea.paintedHeight + scrollBarWidth > flickableForText.height
-    property bool hBarVisible: sourceCodeArea.paintedWidth + vBarDynWidth > flickableForText.width
-    property int vBarDynWidth: vBarVisible ? scrollBarWidth: 0
-    property int hBarDynWidth: hBarVisible ? scrollBarWidth: 0
+    property bool vBarVisible: sourceCodeArea.paintedHeight + sourceCodeArea.topPadding  + scrollBarWidth > flickableForText.height
+    property bool hBarVisible: sourceCodeArea.paintedWidth  + sourceCodeArea.leftPadding + sourceCodeArea.rightPadding > flickableForText.width
+    property real vBarDynWidth: vBarVisible ? scrollBarWidth: 0.0
+    property real hBarDynWidth: hBarVisible ? scrollBarWidth: 0.0
 
     // Expose internals so they can be modified from outside
     property alias textArea: sourceCodeArea
-    property real scrollBarWidth: 12
     property alias currLineBar: currLineBar
     property alias vScrollBar: vBar
     property alias hScrollBar: hBar
