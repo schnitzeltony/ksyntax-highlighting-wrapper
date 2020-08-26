@@ -11,7 +11,9 @@ Flickable {
     property int noopFlickerValue: 500
     // Scroolbar helpers might be helpful outside (symmetrical causes binding loop -> let vBar appear earlier)
     property bool vBarVisible: sourceCodeArea.paintedHeight + scrollBarWidth > flickableForText.height
-    property bool hBarVisible: sourceCodeArea.paintedWidth + sourceCodeArea.rightPadding > flickableForText.width
+    property bool hBarVisible: sourceCodeArea.paintedWidth + vBarDynWidth > flickableForText.width
+    property int vBarDynWidth: vBarVisible ? scrollBarWidth: 0
+    property int hBarDynWidth: hBarVisible ? scrollBarWidth: 0
 
     // Expose internals so they can be modified from outside
     property alias textArea: sourceCodeArea
@@ -52,9 +54,9 @@ Flickable {
         // avoid Material design magic
         background: Item{}
         bottomInset: 0
-        bottomPadding: hBarVisible ? scrollBarWidth: 0
+        bottomPadding: hBarDynWidth
         rightInset: 0
-        rightPadding: vBarVisible ? scrollBarWidth: 0
+        rightPadding: vBarDynWidth
 
         // Page up/down handler: Set new cursor position
         function calcPagePageDown(up) {
@@ -226,11 +228,10 @@ Flickable {
         // Draw box around current line
         Rectangle {
             id: currLineBar
+            x: flickableForText.contentX
+            width: flickableForText.width - vBarDynWidth
             y: sourceCodeArea.cursorRectangle.y
             height: sourceCodeArea.cursorRectangle.height
-            anchors.left: sourceCodeArea.left
-            anchors.right: sourceCodeArea.right
-            anchors.rightMargin: sourceCodeArea.rightPadding
             opacity: 0.1
             color: "grey"
         }
