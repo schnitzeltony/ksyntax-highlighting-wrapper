@@ -84,20 +84,6 @@ Flickable {
                     flickY = -flickerValueKeyBeyondLimit
                 }
                 break;
-            // Right button flick does not cause the wanted effect: flick is
-            // performed without flicking back. So do flick up done here either
-            case Qt.Key_Left:
-                if(cursorPosition === 0) {
-                    endPosReached = true
-                    flickY = flickerValueKeyBeyondLimit
-                }
-                break;
-            case Qt.Key_Right:
-                if(cursorPosition >= length-1) {
-                    endPosReached = true
-                    flickY = -flickerValueKeyBeyondLimit
-                }
-                break;
             }
             if(!flicking && flickY !== 0) {
                 flickableForText.flick(0, flickY)
@@ -251,8 +237,6 @@ Flickable {
             switch(event.key) {
             case Qt.Key_Down:
             case Qt.Key_Up:
-            case Qt.Key_Left:
-            case Qt.Key_Right:
                 flickerOnEnd(event.key)
                 break
             case Qt.Key_PageDown:
