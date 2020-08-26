@@ -7,9 +7,11 @@ Flickable {
     // Qt-Creator page up/down mode (first big step option):
     // Advantage: paging up and down documents passes the same positions
     property bool qtCreatorUpDownMode: true
-    // page up @ top / page down @ bottom flicker value
-    property int noopFlickerValue: 500
-    // Scroolbar helpers might be helpful outside (symmetrical causes binding loop -> let vBar appear earlier)
+    // signal user that key operation exceeds document's limits by flicking
+    // set to 0 to disable this function
+    property int flickerValueKeyBeyondLimit: 500
+    // Scroolbar helpers might be helpful outside (symmetrical terms for
+    // vBarVisible/hBarVisible cause binding loop -> let vBar appear earlier)
     property bool vBarVisible: sourceCodeArea.paintedHeight + scrollBarWidth > flickableForText.height
     property bool hBarVisible: sourceCodeArea.paintedWidth + vBarDynWidth > flickableForText.width
     property int vBarDynWidth: vBarVisible ? scrollBarWidth: 0
@@ -51,36 +53,61 @@ Flickable {
         // Some useful defaults when editing code
         selectByMouse: true
         mouseSelectionMode: TextEdit.SelectWords
-        // avoid Material design magic
+        // avoid Material design magic / don't overlap scrollbars
         background: Item{}
         bottomInset: 0
         bottomPadding: hBarDynWidth
         rightInset: 0
         rightPadding: vBarDynWidth
 
-        // tiny helpers
+        // find 1st position is used commonly
         function findFirstPosInLine(position) {
             return text.lastIndexOf("\n", position-1) + 1
         }
-
-        // Page up/down handler: Set new cursor position
-        function calcPagePageDown(up) {
-            // check for noop page up @ top / page down @ bottom
-            // and add some fun...
+        // beyond end flicker helper
+        function flickerOnEnd(key) {
+            var endPosReached = false
+            var flickY = 0
             var workLineStartPos = findFirstPosInLine(cursorPosition)
-            var noopFlick = 0
-            if(up && workLineStartPos === 0) {
-                noopFlick = noopFlickerValue
-            }
-            else if(!up && text.indexOf("\n", workLineStartPos) == -1) {
-                noopFlick = -noopFlickerValue
-            }
-            if(noopFlick) {
-                if(!flicking) {
-                    flickableForText.flick(0, noopFlick)
+            switch(key) {
+            case Qt.Key_PageUp:
+            case Qt.Key_Up:
+                if(workLineStartPos === 0) {
+                    endPosReached = true
+                    flickY = flickerValueKeyBeyondLimit
                 }
-                return
+                break;
+            case Qt.Key_PageDown:
+            case Qt.Key_Down:
+                if(text.indexOf("\n", workLineStartPos) == -1) {
+                    endPosReached = true
+                    flickY = -flickerValueKeyBeyondLimit
+                }
+                break;
+            // Right button flick does not cause the wanted effect: flick is
+            // performed without flicking back. So do flick up done here either
+            case Qt.Key_Left:
+                if(cursorPosition === 0) {
+                    endPosReached = true
+                    flickY = flickerValueKeyBeyondLimit
+                }
+                break;
+            case Qt.Key_Right:
+                if(cursorPosition >= length-1) {
+                    endPosReached = true
+                    flickY = -flickerValueKeyBeyondLimit
+                }
+                break;
             }
+            if(!flicking && flickY !== 0) {
+                flickableForText.flick(0, flickY)
+            }
+            return endPosReached
+        }
+        // Page up/down handler: Set new cursor position and prepare event
+        // handlers
+        function calcPagePageDown(up) {
+            var workLineStartPos = findFirstPosInLine(cursorPosition)
             // qt-creator mode: If user moves page up to top position, the next
             // page down jumps down line count screen size + offset to keep
             // vertical positions before starting up/down session
@@ -219,14 +246,24 @@ Flickable {
                 privateStateContainer.inPageUpDownYStep = 1
             }
         }
-        // Page up/down: fire handler
+        // fire our extra keyboard handlers
         Keys.onReleased: {
             switch(event.key) {
+            case Qt.Key_Down:
+            case Qt.Key_Up:
+            case Qt.Key_Left:
+            case Qt.Key_Right:
+                flickerOnEnd(event.key)
+                break
             case Qt.Key_PageDown:
-                calcPagePageDown(false)
+                if(!flickerOnEnd(event.key)) {
+                    calcPagePageDown(false)
+                }
                 break;
             case Qt.Key_PageUp:
-                calcPagePageDown(true)
+                if(!flickerOnEnd(event.key)) {
+                    calcPagePageDown(true)
+                }
                 break;
             }
         }
