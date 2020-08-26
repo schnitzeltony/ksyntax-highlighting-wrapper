@@ -61,12 +61,17 @@ Flickable {
             // check for noop page up @ top / page down @ bottom
             // and add some fun...
             var workLineStartPos = text.lastIndexOf("\n", cursorPosition-1) + 1
+            var noopFlick = 0
             if(up && workLineStartPos === 0) {
-                flickableForText.flick(0, noopFlickerValue)
-                return
+                noopFlick = noopFlickerValue
             }
             else if(!up && text.indexOf("\n", workLineStartPos) == -1) {
-                flickableForText.flick(0, -noopFlickerValue)
+                noopFlick = -noopFlickerValue
+            }
+            if(noopFlick) {
+                if(!flicking) {
+                    flickableForText.flick(0, noopFlick)
+                }
                 return
             }
             // qt-creator mode: If user moves page up to top position, the next
