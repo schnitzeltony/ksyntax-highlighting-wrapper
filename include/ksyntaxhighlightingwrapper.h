@@ -4,14 +4,15 @@
 #include "ksyntaxhighlightingwrapper_export.h"
 #include <QQuickTextDocument>
 
-
 QT_BEGIN_NAMESPACE
-class KSyntaxHighlightingWrapperPrivate;
+
+// forward
+class QQmlEngine;
 
 // clang: be quiet
 QT_WARNING_DISABLE_CLANG("-Wshadow-field")
 
-
+class KSyntaxHighlightingWrapperPrivate;
 class KSYNTAXHIGHLIGHTINGWRAPPER_EXPORT KSyntaxHighlightingWrapper : public QObject
 {
   Q_OBJECT
@@ -20,7 +21,8 @@ public:
     virtual ~KSyntaxHighlightingWrapper();
 
     // As name suggests: register for QML usage
-    static void registerQml();
+    static void registerKshwQml();
+    static void registerCaQml(QQmlEngine* engine);
 
     // document
     Q_PROPERTY(QTextDocument *textDocument READ textDocument WRITE setTextDocument NOTIFY documentChanged)
@@ -79,7 +81,6 @@ protected:
     const QScopedPointer<KSyntaxHighlightingWrapperPrivate> d_ptr;
     KSyntaxHighlightingWrapper(KSyntaxHighlightingWrapperPrivate &dd, QObject *parent);
     Q_DECLARE_PRIVATE(KSyntaxHighlightingWrapper)
-private:
 };
 
 QT_END_NAMESPACE

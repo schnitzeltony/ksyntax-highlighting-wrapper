@@ -251,6 +251,7 @@ Flickable {
                 break;
             }
         }
+
         // Draw box around current line
         Rectangle {
             id: currLineBar

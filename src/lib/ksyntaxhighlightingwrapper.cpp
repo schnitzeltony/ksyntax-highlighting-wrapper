@@ -5,9 +5,25 @@
 
 QT_BEGIN_NAMESPACE
 
-static KSyntaxHighlighting::Repository m_repository;
+/////////////////////////////////////////////////////////////////////////////////
+static bool caWasRegistered = false;
+
+void KSyntaxHighlightingWrapper::registerCaQml(QQmlEngine* engine)
+{
+    if(!caWasRegistered) {
+        Q_UNUSED(engine)
+        int iRet = qmlRegisterType(QUrl("qrc:/qml/KSyntaxHighlighting/CodeArea.qml"), "KSyntaxHighlighting", 1, 0, "CodeArea");
+        if(!iRet) {
+            qWarning("Hallo");
+        }
+        caWasRegistered = true;
+    }
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////
+static KSyntaxHighlighting::Repository m_repository;
+
 // private
 KSyntaxHighlightingWrapperPrivate::KSyntaxHighlightingWrapperPrivate(KSyntaxHighlightingWrapper* pPublic) :
     m_highlighter(nullptr),
@@ -237,7 +253,7 @@ KSyntaxHighlightingWrapper::~KSyntaxHighlightingWrapper()
 {
 }
 
-void KSyntaxHighlightingWrapper::registerQml()
+void KSyntaxHighlightingWrapper::registerKshwQml()
 {
     qmlRegisterType<KSyntaxHighlightingWrapper>("KSyntaxHighlighting", 1, 0, "KSyntaxHighlighting");
 }

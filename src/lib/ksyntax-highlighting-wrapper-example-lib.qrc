@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/KSyntaxHighlighting/qmldir</file>
+        <file>qml/KSyntaxHighlighting/CodeArea.qml</file>
+    </qresource>
+</RCC>

@@ -45,7 +45,7 @@ ApplicationWindow {
             }
         }
     }
-    SourceCodeArea {
+    CodeArea {
         id: sourceCodeArea
         anchors.fill: parent
         textArea.focus: true

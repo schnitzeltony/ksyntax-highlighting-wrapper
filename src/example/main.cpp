@@ -10,8 +10,9 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    // Register
-    KSyntaxHighlightingWrapper::registerQml();
+    // Register QML extensions
+    KSyntaxHighlightingWrapper::registerKshwQml();
+    KSyntaxHighlightingWrapper::registerCaQml(&engine);
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

@@ -1,7 +1,7 @@
 # our example application
 add_executable(kswQmlExample
     main.cpp
-    qml.qrc
+    ksyntax-highlighting-wrapper-example.qrc
 )
 
 # where to find headers

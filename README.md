@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 {
     QQmlApplicationEngine engine;
     ...
-    KSyntaxHighlightingWrapper::registerQml();
+    KSyntaxHighlightingWrapper::registerKshwQml();
     ...
     engine.load(url);
     return app.exec();

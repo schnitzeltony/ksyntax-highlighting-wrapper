@@ -4,7 +4,7 @@ add_library(KSyntaxHighlightingWrapper
         ${CMAKE_SOURCE_DIR}/include/ksyntaxhighlightingwrapper.h
         ksyntaxhighlightingwrapper_p.h
         ksyntaxhighlightingwrapper.cpp
-        resources.qrc
+        ksyntax-highlighting-wrapper-example-lib.qrc
 )
 add_library(KSyntaxHighlightingWrapper::KSyntaxHighlightingWrapper ALIAS KSyntaxHighlightingWrapper)
 set_target_properties(KSyntaxHighlightingWrapper PROPERTIES VERSION ${PROJECT_VERSION})
