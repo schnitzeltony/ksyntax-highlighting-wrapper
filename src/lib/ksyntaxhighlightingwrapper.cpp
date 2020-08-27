@@ -1,6 +1,7 @@
 #include <ksyntaxhighlightingwrapper.h>
 #include <ksyntaxhighlightingwrapper_p.h>
 #include <QQuickTextDocument>
+#include <QQmlEngine>
 #include <theme.h>
 
 QT_BEGIN_NAMESPACE
@@ -11,11 +12,19 @@ static bool caWasRegistered = false;
 void KSyntaxHighlightingWrapper::registerCaQml(QQmlEngine* engine)
 {
     if(!caWasRegistered) {
+#if defined(KSW_QML_DEBUG_SOURCE_DIR)
+        QStringList importPaths = engine->importPathList();
+        QString importPath = QStringLiteral(QT_STRINGIFY(KSW_QML_DEBUG_SOURCE_DIR));
+        if(!importPaths.contains(importPath)) {
+            engine->addImportPath(importPath);
+        }
+#else
         Q_UNUSED(engine)
         int iRet = qmlRegisterType(QUrl("qrc:/qml/KSyntaxHighlighting/CodeArea.qml"), "KSyntaxHighlighting", 1, 0, "CodeArea");
         if(!iRet) {
             qWarning("Hallo");
         }
+#endif
         caWasRegistered = true;
     }
 }

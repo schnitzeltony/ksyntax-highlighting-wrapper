@@ -40,6 +40,14 @@ target_compile_options(KSyntaxHighlightingWrapper PRIVATE -Wall)
 # add QT_QML_DEBUG for debug-config
 target_compile_definitions(KSyntaxHighlightingWrapper PRIVATE $<$<CONFIG:Debug>:QT_QML_DEBUG>)
 
+# set debug QML import path to source location:
+set(KSW_QML_DEBUG_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/qml CACHE STRING "" FORCE)
+
+# For QQmlEngine find qml in source dir for debug-config & KSW_LOAD_QML_FROM_SOURCE is set
+target_compile_definitions(KSyntaxHighlightingWrapper PRIVATE $<$<AND:$<CONFIG:Debug>,$<BOOL:${KSW_LOAD_QML_FROM_SOURCE}>>:KSW_QML_DEBUG_SOURCE_DIR=${KSW_QML_DEBUG_SOURCE_DIR}>)
+# help qt-creator find qml (unfortunately cmake does not support generator expressions on set)
+set(QML_IMPORT_PATH ${KSW_QML_DEBUG_SOURCE_DIR} CACHE STRING "" FORCE)
+
 target_link_libraries(KSyntaxHighlightingWrapper
     PRIVATE
         Qt5::Core

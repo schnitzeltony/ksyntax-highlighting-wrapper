@@ -9,6 +9,7 @@ set(PROJECT_VERSION "${KSYNTAXHIGHLIGHTINGWRAPPER_VERSION_MAJOR}.${KSYNTAXHIGHLI
 
 # build options
 option(KSW_BUILD_EXAMPLE "Build example application" OFF)
+option(KSW_LOAD_QML_FROM_SOURCE "Ensure loading QML files for proper debugging" OFF)
 
 # global Qt/C++ settings
 set(CMAKE_AUTOMOC ON)
