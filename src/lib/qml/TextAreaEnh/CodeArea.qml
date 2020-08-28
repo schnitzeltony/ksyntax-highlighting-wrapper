@@ -6,7 +6,7 @@ Flickable {
     // convenient / setup properties:
     // Qt-Creator page up/down mode (first big step option):
     // Advantage: paging up and down documents passes the same positions
-    property bool qtCreatorUpDownMode: true
+    property bool qtCreatorUpDownMode: false
     // signal user that key operation exceeds document's limits by flicking
     // set to 0 to disable this function
     property int flickerValueKeyBeyondLimit: 500
@@ -53,6 +53,7 @@ Flickable {
         // Some useful defaults when editing code
         selectByMouse: true
         mouseSelectionMode: TextEdit.SelectWords
+        font.family: "Source Code Pro"
         // avoid Material design magic / don't overlap scrollbars
         background: Item{}
         bottomInset: 0
