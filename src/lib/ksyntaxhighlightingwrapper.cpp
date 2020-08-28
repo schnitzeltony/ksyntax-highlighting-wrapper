@@ -20,10 +20,7 @@ void KSyntaxHighlightingWrapper::registerCaQml(QQmlEngine* engine)
         }
 #else
         Q_UNUSED(engine)
-        int iRet = qmlRegisterType(QUrl("qrc:/qml/TextAreaEnh/CodeArea.qml"), "TextAreaEnh", 1, 0, "CodeArea");
-        if(!iRet) {
-            qWarning("Hallo");
-        }
+        qmlRegisterType(QUrl("qrc:/qml/TextAreaEnh/CodeArea.qml"), "TextAreaEnh", 1, 0, "CodeArea");
 #endif
         caWasRegistered = true;
     }
