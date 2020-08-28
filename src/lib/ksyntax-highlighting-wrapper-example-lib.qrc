@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>qml/KSyntaxHighlighting/qmldir</file>
-        <file>qml/KSyntaxHighlighting/CodeArea.qml</file>
+        <file>qml/TextAreaEnh/qmldir</file>
+        <file>qml/TextAreaEnh/CodeArea.qml</file>
     </qresource>
 </RCC>
