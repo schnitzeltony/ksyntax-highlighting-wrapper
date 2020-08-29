@@ -8,6 +8,7 @@ QT_BEGIN_NAMESPACE
 
 static KSyntaxHighlighting::Repository m_repository;
 
+/////////////////////////////////////////////////////////////////////////////////
 // private
 KSyntaxHighlightingWrapperPrivate::KSyntaxHighlightingWrapperPrivate(KSyntaxHighlightingWrapper* pPublic) :
     m_highlighter(nullptr),
@@ -287,7 +288,7 @@ void KSyntaxHighlightingWrapper::setDefinitionForMimeType(const QString &mimeTyp
     }
 }
 
-const QString KSyntaxHighlightingWrapper::definitionName()
+ const QString KSyntaxHighlightingWrapper::definitionName()
 {
     Q_D(KSyntaxHighlightingWrapper);
     return d->definitionName();
@@ -301,7 +302,7 @@ void KSyntaxHighlightingWrapper::setDefinitionName(const QString &definitionName
     }
 }
 
-int KSyntaxHighlightingWrapper::definitionNumber()
+const int KSyntaxHighlightingWrapper::definitionNumber()
 {
     Q_D(KSyntaxHighlightingWrapper);
     return d->definitionNumber();

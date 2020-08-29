@@ -2,12 +2,14 @@
 #define KSYNTAX_HIGHLIGHTING_WRAPPER_H
 
 #include "ksyntaxhighlightingwrapper_export.h"
-#include <QQuickTextDocument>
+#include <QObject>
 
 QT_BEGIN_NAMESPACE
 
 // forward
 class QQmlEngine;
+class QQuickTextDocument;
+class QTextDocument;
 
 // clang: be quiet
 QT_WARNING_DISABLE_CLANG("-Wshadow-field")
@@ -46,7 +48,7 @@ public:
     Q_PROPERTY(QStringList themeNamesTranslated CONSTANT READ themeNamesTranslated)
 
 
-    // implemetation for properties & invokables
+    // implemetation for properties
     void setTextDocument(QTextDocument *textDocument);
     QTextDocument *textDocument() const;
 
@@ -55,7 +57,7 @@ public:
 
     const QString definitionName();
     void setDefinitionName(const QString& definitionName);
-    int definitionNumber();
+    const int definitionNumber();
     void setDefinitionNumber(const int definitionNumber);
 
     const QStringList definitionNames() const;
