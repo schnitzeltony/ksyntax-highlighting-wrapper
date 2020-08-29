@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <ksyntaxhighlightingwrapper.h>
+#include <textarea_enhanced.h>
 
 int main(int argc, char *argv[])
 {
@@ -11,8 +12,8 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
 
     // Register QML extensions
-    KSyntaxHighlightingWrapper::registerKshwQml();
-    KSyntaxHighlightingWrapper::registerCaQml(&engine);
+    KSyntaxHighlightingWrapper::registerQml();
+    TextAreaEnhanced::registerQml(&engine);
 
     const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

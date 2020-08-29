@@ -1,4 +1,6 @@
 add_subdirectory(lib)
 if(KSW_BUILD_EXAMPLE)
     add_subdirectory(example)
+    add_dependencies(kswQmlExample KSyntaxHighlightingWrapper)
+    add_dependencies(kswQmlExample TextAreaEnhanced)
 endif(KSW_BUILD_EXAMPLE)

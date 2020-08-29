@@ -21,8 +21,7 @@ public:
     virtual ~KSyntaxHighlightingWrapper();
 
     // As name suggests: register for QML usage
-    static void registerKshwQml();
-    static void registerCaQml(QQmlEngine* engine);
+    static void registerQml();
 
     // document
     Q_PROPERTY(QTextDocument *textDocument READ textDocument WRITE setTextDocument NOTIFY documentChanged)

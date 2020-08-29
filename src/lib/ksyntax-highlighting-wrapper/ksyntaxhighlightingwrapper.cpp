@@ -6,30 +6,6 @@
 
 QT_BEGIN_NAMESPACE
 
-/////////////////////////////////////////////////////////////////////////////////
-#if !defined(KSW_QML_DEBUG_SOURCE_DIR)
-static bool caWasRegistered = false;
-#endif
-
-void KSyntaxHighlightingWrapper::registerCaQml(QQmlEngine* engine)
-{
-#if defined(KSW_QML_DEBUG_SOURCE_DIR)
-    QStringList importPaths = engine->importPathList();
-    QString importPath = QStringLiteral(QT_STRINGIFY(KSW_QML_DEBUG_SOURCE_DIR));
-    if(!importPaths.contains(importPath)) {
-        engine->addImportPath(importPath);
-    }
-#else
-    if(!caWasRegistered) {
-        Q_UNUSED(engine)
-        qmlRegisterType(QUrl("qrc:/qml/TextAreaEnh/CodeArea.qml"), "TextAreaEnh", 1, 0, "CodeArea");
-        caWasRegistered = true;
-    }
-#endif
-}
-
-
-/////////////////////////////////////////////////////////////////////////////////
 static KSyntaxHighlighting::Repository m_repository;
 
 // private
@@ -105,6 +81,7 @@ bool KSyntaxHighlightingWrapperPrivate::setDefinition(KSyntaxHighlighting::Defin
                 QTextDocument *currDocument = m_textDocument;
                 setTextDocument(nullptr);
                 setTextDocument(currDocument);
+                //m_highlighter->setDefinition(def);
             }
         }
     }
@@ -261,7 +238,7 @@ KSyntaxHighlightingWrapper::~KSyntaxHighlightingWrapper()
 {
 }
 
-void KSyntaxHighlightingWrapper::registerKshwQml()
+void KSyntaxHighlightingWrapper::registerQml()
 {
     qmlRegisterType<KSyntaxHighlightingWrapper>("KSyntaxHighlighting", 1, 0, "KSyntaxHighlighting");
 }

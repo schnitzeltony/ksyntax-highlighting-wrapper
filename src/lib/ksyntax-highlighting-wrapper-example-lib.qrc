@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>qml/TextAreaEnh/qmldir</file>
-        <file>qml/TextAreaEnh/CodeArea.qml</file>
-    </qresource>
-</RCC>
