@@ -3,6 +3,11 @@ add_library(TextAreaEnhanced
         textarea_enhanced.h
         textarea_enhanced.cpp
         textarea_enhanced_lib.qrc
+        textsearch_helper.h
+        textsearch_helper_p.h
+        textsearch_helper.cpp
+        textsearch_highlighter.h
+        textsearch_highlighter.cpp
 )
 add_library(TextAreaEnhanced::TextAreaEnhanced ALIAS TextAreaEnhanced)
 set_target_properties(TextAreaEnhanced PROPERTIES VERSION ${PROJECT_VERSION})
@@ -15,6 +20,7 @@ generate_export_header(TextAreaEnhanced)
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/textareaenhanced_export.h
     ${CMAKE_CURRENT_SOURCE_DIR}/textarea_enhanced.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/textsearch_helper.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/textarea-enhanced
 )
 
