@@ -14,6 +14,10 @@ KSyntaxHighlightingWrapperPrivate::KSyntaxHighlightingWrapperPrivate(KSyntaxHigh
     m_highlighter(nullptr),
     m_quickTextDocument(nullptr),
     m_textDocument(nullptr),
+    m_caseSensitive(false),
+    m_wholeWords(false),
+    m_regExpr(false),
+    m_highlightColor("yellow"),
     q_ptr(pPublic)
 {
 }
@@ -33,10 +37,11 @@ bool KSyntaxHighlightingWrapperPrivate::setTextDocument(QTextDocument *textDocum
             highlighterChanged = true;
         }
         if(textDocument) {
-            m_highlighter = new KSyntaxHighlighting::SyntaxHighlighter(textDocument);
+            m_highlighter = new KSyntaxHighlighterEx(textDocument, this);
             highlighterChanged = true;
             m_highlighter->setTheme(m_currentTheme);
             m_highlighter->setDefinition(m_currentDefinition);
+            m_highlighter->newSearch();
         }
     }
     return highlighterChanged;
@@ -222,6 +227,110 @@ const QStringList KSyntaxHighlightingWrapperPrivate::themeNamesTranslated() cons
     return themeNamesTranslated;
 }
 
+QString KSyntaxHighlightingWrapperPrivate::search() const
+{
+    return m_search;
+}
+
+bool KSyntaxHighlightingWrapperPrivate::setSearch(const QString &search)
+{
+    bool bChanged = false;
+    if(m_search != search) {
+        m_search = search;
+        bChanged = true;
+        if(m_highlighter) {
+            m_highlighter->newSearch();
+        }
+    }
+    return bChanged;
+}
+
+bool KSyntaxHighlightingWrapperPrivate::caseSensitive() const
+{
+    return m_caseSensitive;
+}
+
+bool KSyntaxHighlightingWrapperPrivate::setCaseSensitive(const bool caseSensitive)
+{
+    bool bChanged = false;
+    if(m_caseSensitive != caseSensitive) {
+        m_caseSensitive = caseSensitive;
+        bChanged = true;
+        if(m_highlighter) {
+            m_highlighter->newSearch();
+        }
+    }
+    return bChanged;
+}
+
+bool KSyntaxHighlightingWrapperPrivate::wholeWords() const
+{
+    return m_wholeWords;
+}
+
+bool KSyntaxHighlightingWrapperPrivate::setWholeWords(const bool wholeWords)
+{
+    bool bChanged = false;
+    if(m_wholeWords != wholeWords) {
+        m_wholeWords = wholeWords;
+        bChanged = true;
+        if(m_highlighter) {
+            m_highlighter->newSearch();
+        }
+    }
+    return bChanged;
+}
+
+bool KSyntaxHighlightingWrapperPrivate::regExpr() const
+{
+    return m_regExpr;
+}
+
+bool KSyntaxHighlightingWrapperPrivate::setRegExpr(const bool regExpr)
+{
+    bool bChanged = false;
+    if(m_regExpr != regExpr) {
+        bChanged = true;
+        if(m_highlighter) {
+            m_highlighter->newSearch();
+        }
+    }
+    return bChanged;
+}
+
+QString KSyntaxHighlightingWrapperPrivate::replace() const
+{
+    return m_replace;
+}
+
+bool KSyntaxHighlightingWrapperPrivate::setReplace(const QString &replace)
+{
+    bool bChanged = false;
+    if(m_replace != replace) {
+        m_replace = replace;
+        bChanged = true;
+    }
+    return bChanged;
+}
+
+const QColor KSyntaxHighlightingWrapperPrivate::highlightColor()
+{
+    return m_highlightColor;
+}
+
+bool KSyntaxHighlightingWrapperPrivate::setHighlightColor(const QColor highlightColor)
+{
+    bool colorChanged = false;
+    if(highlightColor != m_highlightColor) {
+        m_highlightColor = highlightColor;
+        colorChanged = true;
+        if(m_highlighter) {
+            m_highlighter->newSearch();
+        }
+    }
+    return colorChanged;
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 // public
 KSyntaxHighlightingWrapper::KSyntaxHighlightingWrapper(QObject *parent) :
@@ -287,6 +396,17 @@ void KSyntaxHighlightingWrapper::setDefinitionForMimeType(const QString &mimeTyp
         emit definitionChanged();
     }
 }
+
+void KSyntaxHighlightingWrapper::findPrevious()
+{
+    // TODO
+}
+
+void KSyntaxHighlightingWrapper::findNext()
+{
+    // TODO
+}
+
 
  const QString KSyntaxHighlightingWrapper::definitionName()
 {
@@ -366,6 +486,90 @@ const QStringList KSyntaxHighlightingWrapper::themeNamesTranslated() const
 {
     Q_D(const KSyntaxHighlightingWrapper);
     return d->themeNamesTranslated();
+}
+
+QString KSyntaxHighlightingWrapper::search() const
+{
+    Q_D(const KSyntaxHighlightingWrapper);
+    return d->search();
+}
+
+void KSyntaxHighlightingWrapper::setSearch(const QString &search)
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    if(d->setSearch(search)) {
+        emit searchParamChanged();
+    }
+}
+
+bool KSyntaxHighlightingWrapper::caseSensitive() const
+{
+    Q_D(const KSyntaxHighlightingWrapper);
+    return d->caseSensitive();
+}
+
+void KSyntaxHighlightingWrapper::setCaseSensitive(const bool caseSensitive)
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    if(d->setCaseSensitive(caseSensitive)) {
+        emit searchParamChanged();
+    }
+}
+
+bool KSyntaxHighlightingWrapper::wholeWords() const
+{
+    Q_D(const KSyntaxHighlightingWrapper);
+    return d->wholeWords();
+}
+
+void KSyntaxHighlightingWrapper::setWholeWords(const bool wholeWords)
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    if(d->setWholeWords(wholeWords)) {
+        emit searchParamChanged();
+    }
+}
+
+bool KSyntaxHighlightingWrapper::regExpr() const
+{
+    Q_D(const KSyntaxHighlightingWrapper);
+    return d->regExpr();
+}
+
+void KSyntaxHighlightingWrapper::setRegExpr(const bool regExpr)
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    if(d->setRegExpr(regExpr)) {
+        emit searchParamChanged();
+    }
+}
+
+QString KSyntaxHighlightingWrapper::replace() const
+{
+    Q_D(const KSyntaxHighlightingWrapper);
+    return d->replace();
+}
+
+void KSyntaxHighlightingWrapper::setReplace(const QString &replace)
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    if(d->setReplace(replace)) {
+        emit replaceChanged();
+    }
+}
+
+const QColor KSyntaxHighlightingWrapper::highlightColor()
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    return d->highlightColor();
+}
+
+void KSyntaxHighlightingWrapper::setHighlightColor(const QColor highlightColor)
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    if(d->setHighlightColor(highlightColor)) {
+        emit highlightColorChanged();
+    }
 }
 
 QT_END_NAMESPACE

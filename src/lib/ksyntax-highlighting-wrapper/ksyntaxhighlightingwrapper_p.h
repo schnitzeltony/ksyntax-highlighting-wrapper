@@ -2,8 +2,8 @@
 #define KSYNTAX_HIGHLIGHTING_WRAPPER_P_H
 
 #include "ksyntaxhighlightingwrapper.h"
+#include "ksyntaxhighlighterex.h"
 #include <repository.h>
-#include <syntaxhighlighter.h>
 #include <definition.h>
 #include <theme.h>
 
@@ -12,14 +12,15 @@ class KSyntaxHighlightingWrapperPrivate
     Q_DECLARE_PUBLIC(KSyntaxHighlightingWrapper)
 public:
     virtual ~KSyntaxHighlightingWrapperPrivate();
-private:
     KSyntaxHighlightingWrapperPrivate(KSyntaxHighlightingWrapper* pPublic);
 
+    // Q(Quick)TextDocument access
     bool setTextDocument(QTextDocument *textDocument);
     QTextDocument *textDocument() const;
     bool setQmlTextDocument(QQuickTextDocument *qmlTextDocument);
     QQuickTextDocument *qmlTextDocument() const;
 
+    // Definition access
     bool setDefinition(KSyntaxHighlighting::Definition def);
     KSyntaxHighlighting::Definition definition();
     bool setDefinitionForFileName(const QString &fileName);
@@ -30,6 +31,7 @@ private:
     int definitionNumber();
     bool setDefinitionNumber(const int definitionNumber);
 
+    // Theme access
     KSyntaxHighlighting::Theme theme();
     bool setTheme(KSyntaxHighlighting::Theme theme);
     const QString themeName();
@@ -39,8 +41,27 @@ private:
     const QStringList themeNames() const;
     const QStringList themeNamesTranslated() const;
 
+    // Search param access
+    QString search() const;
+    bool setSearch(const QString& search);
+
+    bool caseSensitive() const;
+    bool setCaseSensitive(const bool caseSensitive);
+
+    bool wholeWords() const;
+    bool setWholeWords(const bool wholeWords);
+
+    bool regExpr() const;
+    bool setRegExpr(const bool regExpr);
+
+    QString replace() const;
+    bool setReplace(const QString& replace);
+
+    const QColor highlightColor();
+    bool setHighlightColor(const QColor highlightColor);
+
 private:
-    KSyntaxHighlighting::SyntaxHighlighter *m_highlighter;
+    KSyntaxHighlighterEx *m_highlighter;
 
     // We have to keep for getter
     QQuickTextDocument *m_quickTextDocument;
@@ -52,6 +73,15 @@ private:
     // without beeing set they are invalid. Maybe we have to change that..
     KSyntaxHighlighting::Definition m_currentDefinition;
     KSyntaxHighlighting::Theme m_currentTheme;  // default is invalid see theme.h
+
+    // search params
+    QString m_search;
+    bool m_caseSensitive;
+    bool m_wholeWords;
+    bool m_regExpr;
+
+    QColor m_highlightColor;
+    QString m_replace;
 
     KSyntaxHighlightingWrapper *q_ptr;
 };

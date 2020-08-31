@@ -30,6 +30,17 @@ ApplicationWindow {
                     "JSON", "Markdown", "Python", "QML"
                 ]
             }
+            // Temp for test
+            Label {
+                Layout.leftMargin: toolbar.tmargins
+                text: qsTr("Search:")
+            }
+            TextEdit {
+                Layout.leftMargin: toolbar.tmargins
+                Layout.minimumWidth: 50
+                id: searchText
+            }
+
             Item { Layout.fillWidth: true }
             Label {
                 Layout.leftMargin: toolbar.tmargins
@@ -56,8 +67,11 @@ ApplicationWindow {
         KSyntaxHighlighting {
             id: kSyntaxHighltighter
             qmlTextDocument: sourceCodeArea.textArea.textDocument
+
             definitionName: comboDefinitons.currentText
             themeName: comboThemes.currentText
+
+            search: searchText.text
         }
     }
 }

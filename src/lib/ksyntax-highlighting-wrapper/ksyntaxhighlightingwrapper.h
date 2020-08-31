@@ -29,6 +29,7 @@ public:
     Q_PROPERTY(QTextDocument *textDocument READ textDocument WRITE setTextDocument NOTIFY documentChanged)
     Q_PROPERTY(QQuickTextDocument *qmlTextDocument READ qmlTextDocument WRITE setQmlTextDocument NOTIFY documentChanged)
 
+    // KSyntaxHighligher
     // access current definition
     Q_PROPERTY(QString definitionName READ definitionName WRITE setDefinitionName NOTIFY definitionChanged)
     Q_PROPERTY(int definitionNumber READ definitionNumber WRITE setDefinitionNumber NOTIFY definitionChanged)
@@ -47,8 +48,25 @@ public:
     Q_PROPERTY(QStringList themeNames CONSTANT READ themeNames)
     Q_PROPERTY(QStringList themeNamesTranslated CONSTANT READ themeNamesTranslated)
 
+    // Search highlighter
+    // search params
+    Q_PROPERTY(QString search READ search WRITE setSearch NOTIFY searchParamChanged)
+    Q_PROPERTY(bool caseSensitive READ caseSensitive WRITE setCaseSensitive NOTIFY searchParamChanged)
+    Q_PROPERTY(bool wholeWords READ wholeWords WRITE setWholeWords NOTIFY searchParamChanged)
+    Q_PROPERTY(bool regExpr READ regExpr WRITE setRegExpr NOTIFY searchParamChanged)
 
-    // implemetation for properties
+    // search methods
+    Q_INVOKABLE void findPrevious();
+    Q_INVOKABLE void findNext();
+
+    // replace
+    Q_PROPERTY(QString replace READ replace WRITE setReplace NOTIFY replaceChanged)
+
+    // higlight color
+    Q_PROPERTY(QColor highlightColor READ highlightColor WRITE setHighlightColor NOTIFY highlightColorChanged)
+
+
+    // implemetation for KSyntaxHighligher properties
     void setTextDocument(QTextDocument *textDocument);
     QTextDocument *textDocument() const;
 
@@ -71,10 +89,32 @@ public:
     const QStringList themeNames() const;
     const QStringList themeNamesTranslated() const;
 
+    // implemetation for KSyntaxHighligher properties
+    QString search() const;
+    void setSearch(const QString& search);
+
+    bool caseSensitive() const;
+    void setCaseSensitive(const bool caseSensitive);
+
+    bool wholeWords() const;
+    void setWholeWords(const bool wholeWords);
+
+    bool regExpr() const;
+    void setRegExpr(const bool regExpr);
+
+    QString replace() const;
+    void setReplace(const QString& replace);
+
+    const QColor highlightColor();
+    void setHighlightColor(const QColor highlightColor);
+
 signals:
     void documentChanged();
     void definitionChanged();
     void themeChanged();
+    void searchParamChanged();
+    void replaceChanged();
+    void highlightColorChanged();
 
 public slots:
 

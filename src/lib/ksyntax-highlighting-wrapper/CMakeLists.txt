@@ -4,6 +4,8 @@ add_library(KSyntaxHighlightingWrapper
         ksyntaxhighlightingwrapper.h
         ksyntaxhighlightingwrapper_p.h
         ksyntaxhighlightingwrapper.cpp
+        ksyntaxhighlighterex.h
+        ksyntaxhighlighterex.cpp
 )
 add_library(KSyntaxHighlightingWrapper::KSyntaxHighlightingWrapper ALIAS KSyntaxHighlightingWrapper)
 set_target_properties(KSyntaxHighlightingWrapper PROPERTIES VERSION ${PROJECT_VERSION})
