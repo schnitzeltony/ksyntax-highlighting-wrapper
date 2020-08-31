@@ -20,7 +20,7 @@ protected:
 private:
     KSyntaxHighlightingWrapperPrivate* m_higlightWrapperPrivate;
     bool m_highlightSearchOnly;
-    QTextCharFormat m_textCharFormat;
+    QBrush m_searchHighlightBrush;
     QRegularExpression m_searchExpression;
 };
 

@@ -1,6 +1,7 @@
 #include "ksyntaxhighlighterex.h"
 #include "ksyntaxhighlightingwrapper_p.h"
 #include <QTextDocument>
+#include <QAbstractTextDocumentLayout>
 
 KSyntaxHighlighterEx::KSyntaxHighlighterEx(QTextDocument *document, KSyntaxHighlightingWrapperPrivate *higlightWrapperPrivate) :
     KSyntaxHighlighting::SyntaxHighlighter(document),
@@ -16,9 +17,8 @@ KSyntaxHighlighterEx::~KSyntaxHighlighterEx()
 void KSyntaxHighlighterEx::highlightBlock(const QString &text)
 {
     // ksyntax-highlight
-    if(!m_highlightSearchOnly) {
-        KSyntaxHighlighting::SyntaxHighlighter::highlightBlock(text);
-    }
+    KSyntaxHighlighting::SyntaxHighlighter::highlightBlock(text);
+
     // search-highlight
     // stolen from qt-creator / texteditor.cpp
     int idx = -1;
@@ -34,8 +34,15 @@ void KSyntaxHighlighterEx::highlightBlock(const QString &text)
         if (m_higlightWrapperPrivate->wholeWords() &&
             ((idx && text.at(idx-1).isLetterOrNumber()) || (idx + l < text.length() && text.at(idx + l).isLetterOrNumber())))
             continue;
-        setFormat(idx, l, m_textCharFormat);
+        for(int idxHighlight=idx; idxHighlight<idx+l; ++idxHighlight) {
+            // don't ruin what KSyntaxHighlighting has done
+            QTextCharFormat currFormat = format(idxHighlight);
+            currFormat.setBackground(m_searchHighlightBrush);
+            setFormat(idx, l, currFormat);
+        }
     }
+    // make sure block is repainted in QML
+    document()->documentLayout()->updateBlock(currentBlock());
 }
 
 void KSyntaxHighlighterEx::newSearch()
@@ -49,11 +56,12 @@ void KSyntaxHighlighterEx::newSearch()
                 QRegularExpression::NoPatternOption :
                 QRegularExpression::CaseInsensitiveOption;
 
-    m_textCharFormat.setBackground(QBrush(m_higlightWrapperPrivate->highlightColor()));
-
     m_searchExpression.setPattern(pattern);
     m_searchExpression.setPatternOptions(options);
 
+    m_searchHighlightBrush = QBrush(m_higlightWrapperPrivate->highlightColor());
+
+    // TODO this needs optimization!!!
     rehighlight();
     m_highlightSearchOnly = false;
 }
