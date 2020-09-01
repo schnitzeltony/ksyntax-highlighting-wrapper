@@ -81,13 +81,7 @@ bool KSyntaxHighlightingWrapperPrivate::setDefinition(KSyntaxHighlighting::Defin
             m_currentDefinition = def;
             changed = true;
             if(m_highlighter) {
-                // Although ksyntaxhighlighter calls rehighlight, the document
-                // is not re-rendered. So choose the brute force way: Unload
-                // and reload highlighter
-                QTextDocument *currDocument = m_textDocument;
-                setTextDocument(nullptr);
-                setTextDocument(currDocument);
-                //m_highlighter->setDefinition(def);
+                m_highlighter->setDefinition(def);
             }
         }
     }
@@ -156,12 +150,10 @@ bool KSyntaxHighlightingWrapperPrivate::setTheme(KSyntaxHighlighting::Theme them
             m_currentTheme = theme;
             changed = true;
             if(m_highlighter) {
+                m_highlighter->setTheme(theme);
                 // ksyntaxhighlighter does not call rehighlight due to it's
-                // design. So choose the sam brute force way as setDefinition
-                // does: Unload and reload highlighter
-                QTextDocument *currDocument = m_textDocument;
-                setTextDocument(nullptr);
-                setTextDocument(currDocument);
+                // design. So it's upon us
+                m_highlighter->rehighlight();
             }
         }
     }
