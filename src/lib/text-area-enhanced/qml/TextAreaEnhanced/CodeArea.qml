@@ -11,6 +11,7 @@ Flickable {
     // set to 0 to disable this function
     property int flickerValueKeyBeyondLimit: 500
     property real scrollBarWidth: 12.0
+    property var searchFrame
     // Scrollbar helpers might be useful outside (symmetrical terms for
     // vBarVisible/hBarVisible cause binding loop -> let vBar appear earlier)
     property bool vBarVisible: sourceCodeArea.paintedHeight + sourceCodeArea.topPadding  + scrollBarWidth > flickableForText.height
@@ -250,6 +251,19 @@ Flickable {
                     calcPagePageDown(true)
                 }
                 break;
+            case Qt.Key_Escape:
+                if(searchFrame && 'showSearchFrame' in searchFrame) {
+                    searchFrame.showSearchFrame = false
+                }
+                break;
+            }
+        }
+        Shortcut {
+            sequence: "Ctrl+F"
+            onActivated: {
+                if(searchFrame && 'showSearchFrame' in searchFrame) {
+                    searchFrame.showSearchFrame = true
+                }
             }
         }
 

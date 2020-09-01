@@ -57,12 +57,21 @@ ApplicationWindow {
             }
         }
     }
+    SearchFrame {
+        id: searchFrame
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+    }
     CodeArea {
         id: sourceCodeArea
-        anchors.fill: parent
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: searchFrame.bottom
+        anchors.bottom: parent.bottom
         textArea.focus: true
-        //textArea.font.pointSize: 8
         qtCreatorUpDownMode: true
+        searchFrame: searchFrame
         textArea.placeholderText: qsTr("Drop some text here and select a matching syntax definition")
         KSyntaxHighlighting {
             id: kSyntaxHighltighter

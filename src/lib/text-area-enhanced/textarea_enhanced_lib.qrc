@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>qml/TextAreaEnhanced/qmldir</file>
         <file>qml/TextAreaEnhanced/CodeArea.qml</file>
+        <file>qml/TextAreaEnhanced/SearchFrame.qml</file>
     </qresource>
 </RCC>

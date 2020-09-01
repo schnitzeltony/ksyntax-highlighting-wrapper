@@ -17,6 +17,7 @@ void TextAreaEnhanced::registerQml(QQmlEngine *engine)
     if(!wasRegistered) {
         Q_UNUSED(engine)
         qmlRegisterType(QUrl("qrc:/qml/TextAreaEnhanced/CodeArea.qml"), "TextAreaEnhanced", 1, 0, "CodeArea");
+        qmlRegisterType(QUrl("qrc:/qml/TextAreaEnhanced/SearchFrame.qml"), "TextAreaEnhanced", 1, 0, "SearchFrame");
         wasRegistered = true;
     }
 #endif

@@ -1,2 +1,3 @@
 module TextAreaEnhanced
 CodeArea 1.0 CodeArea.qml
+SearchFrame 1.0 SearchFrame.qml
