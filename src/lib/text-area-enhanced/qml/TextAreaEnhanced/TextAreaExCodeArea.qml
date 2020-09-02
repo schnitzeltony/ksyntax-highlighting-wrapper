@@ -3,6 +3,8 @@ import QtQuick.Controls 2.12
 
 Flickable {
     id: flickableForText
+    // properties used by other components
+    property bool  showSearchFrame: false
     // convenient / setup properties:
     // Qt-Creator page up/down mode (first big step option):
     // Advantage: paging up and down documents passes the same positions
@@ -11,7 +13,6 @@ Flickable {
     // set to 0 to disable this function
     property int flickerValueKeyBeyondLimit: 500
     property real scrollBarWidth: 12.0
-    property var searchFrame
     // Scrollbar helpers might be useful outside (symmetrical terms for
     // vBarVisible/hBarVisible cause binding loop -> let vBar appear earlier)
     property bool vBarVisible: sourceCodeArea.paintedHeight + sourceCodeArea.topPadding  + scrollBarWidth > flickableForText.height
@@ -19,11 +20,12 @@ Flickable {
     property real vBarDynWidth: vBarVisible ? scrollBarWidth: 0.0
     property real hBarDynWidth: hBarVisible ? scrollBarWidth: 0.0
 
-    // Expose internals so they can be modified from outside
+    // Expose internals so they can be modified/acessed from outside
     property alias textArea: sourceCodeArea
     property alias currLineBar: currLineBar
     property alias vScrollBar: vBar
     property alias hScrollBar: hBar
+    property alias textDocument: sourceCodeArea.textDocument
 
     // Internal / 'private' types/bindings...
     onQtCreatorUpDownModeChanged: {
@@ -252,18 +254,14 @@ Flickable {
                 }
                 break;
             case Qt.Key_Escape:
-                if(searchFrame && 'showSearchFrame' in searchFrame) {
-                    searchFrame.showSearchFrame = false
-                }
+                showSearchFrame = false
                 break;
             }
         }
         Shortcut {
             sequence: "Ctrl+F"
             onActivated: {
-                if(searchFrame && 'showSearchFrame' in searchFrame) {
-                    searchFrame.showSearchFrame = true
-                }
+                showSearchFrame = true
             }
         }
 

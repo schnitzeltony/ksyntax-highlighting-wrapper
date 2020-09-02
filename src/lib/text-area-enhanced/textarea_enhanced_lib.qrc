@@ -1,7 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/TextAreaEnhanced/qmldir</file>
-        <file>qml/TextAreaEnhanced/CodeArea.qml</file>
-        <file>qml/TextAreaEnhanced/SearchFrame.qml</file>
+        <file>qml/TextAreaEnhanced/TextAreaExCodeArea.qml</file>
+        <file>qml/TextAreaEnhanced/TextAreaExConnector.qml</file>
+        <file>qml/TextAreaEnhanced/TextAreaExSearchFrame.qml</file>
     </qresource>
 </RCC>

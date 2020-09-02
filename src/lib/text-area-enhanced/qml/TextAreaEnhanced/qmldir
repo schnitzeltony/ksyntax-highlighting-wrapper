@@ -1,3 +1,4 @@
 module TextAreaEnhanced
-CodeArea 1.0 CodeArea.qml
-SearchFrame 1.0 SearchFrame.qml
+TextAreaExCodeArea 1.0 TextAreaExCodeArea.qml
+TextAreaExSearchFrame 1.0 TextAreaExSearchFrame.qml
+TextAreaExConnector 1.0 TextAreaExConnector.qml

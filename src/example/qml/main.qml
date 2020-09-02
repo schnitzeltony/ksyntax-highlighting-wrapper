@@ -30,17 +30,6 @@ ApplicationWindow {
                     "JSON", "Markdown", "Python", "QML"
                 ]
             }
-            // Temp for test
-            Label {
-                Layout.leftMargin: toolbar.tmargins
-                text: qsTr("Search:")
-            }
-            TextEdit {
-                Layout.leftMargin: toolbar.tmargins
-                Layout.minimumWidth: 50
-                id: searchText
-            }
-
             Item { Layout.fillWidth: true }
             Label {
                 Layout.leftMargin: toolbar.tmargins
@@ -57,13 +46,7 @@ ApplicationWindow {
             }
         }
     }
-    SearchFrame {
-        id: searchFrame
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-    }
-    CodeArea {
+    TextAreaExCodeArea {
         id: sourceCodeArea
         anchors.left: parent.left
         anchors.right: parent.right
@@ -71,16 +54,23 @@ ApplicationWindow {
         anchors.bottom: parent.bottom
         textArea.focus: true
         qtCreatorUpDownMode: true
-        searchFrame: searchFrame
         textArea.placeholderText: qsTr("Drop some text here and select a matching syntax definition")
-        KSyntaxHighlighting {
-            id: kSyntaxHighltighter
-            qmlTextDocument: sourceCodeArea.textArea.textDocument
-
-            definitionName: comboDefinitons.currentText
-            themeName: comboThemes.currentText
-
-            search: searchText.text
-        }
+    }
+    TextAreaExSearchFrame {
+        id: searchFrame
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+    }
+    KSyntaxHighlighting {
+        id: kSyntaxHighltighter
+        definitionName: comboDefinitons.currentText
+        themeName: comboThemes.currentText
+    }
+    TextAreaExConnector {
+        id: textAreaConnector
+        codeArea: sourceCodeArea
+        searchFrame: searchFrame
+        syntaxHighligter: kSyntaxHighltighter
     }
 }
