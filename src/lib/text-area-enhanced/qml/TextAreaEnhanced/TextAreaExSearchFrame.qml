@@ -3,28 +3,34 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 
 Rectangle {
+    // settings
     property color backgroundColor: "#505050"
     property color backgroundInBackgroundColor: "white"
     property color textColor: "black"
-
-    // properties used by other components
-    property bool showSearchFrame: false
-
-    property alias search: textFind.text
-
-    color: backgroundColor
-    height: showSearchFrame  ? 50 : 0
-    onShowSearchFrameChanged: {
-        if(showSearchFrame) {
+    // connectors to other items
+    property var textAreaEx
+    function show(show, strSearch) {
+        if(show) {
+            height = 50 // TODO bouncer
+            if(strSearch !== "") {
+                textFind.text = strSearch
+            }
             textFind.focus = true
+            textFind.selectAll()
+            visible = true
         }
         else {
+            height = 0 // TODO bouncer
             textFind.focus = false
             textReplace.focus = false
+            visible = false
         }
     }
+    // convenient aliases
+    property alias search: textFind.text
+    property alias replace: textReplace.text
 
-    visible: showSearchFrame
+    color: backgroundColor
     Text {
         id: labelFind
         text: qsTr("Find:")
@@ -57,6 +63,16 @@ Rectangle {
                 border.width: 1
             }
         }
+        Keys.onReleased: {
+            switch(event.key) {
+            case Qt.Key_Escape:
+                focus = false
+                if(textAreaEx && 'textArea' in textAreaEx) {
+                    textAreaEx.textArea.forceActiveFocus()
+                }
+                break;
+            }
+        }
     }
     TextField {
         id: textReplace
@@ -70,6 +86,16 @@ Rectangle {
                 color: backgroundInBackgroundColor
                 border.color: backgroundColor
                 border.width: 1
+            }
+        }
+        Keys.onReleased: {
+            switch(event.key) {
+            case Qt.Key_Escape:
+                focus = false
+                if(textAreaEx) {
+                    textAreaEx.forceActiveFocus()
+                }
+                break;
             }
         }
     }

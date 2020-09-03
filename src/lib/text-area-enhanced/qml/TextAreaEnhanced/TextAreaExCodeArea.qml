@@ -3,8 +3,8 @@ import QtQuick.Controls 2.12
 
 Flickable {
     id: flickableForText
-    // properties used by other components
-    property bool  showSearchFrame: false
+    // connectors to other items
+    property var searchFrame
     // convenient / setup properties:
     // Qt-Creator page up/down mode (first big step option):
     // Advantage: paging up and down documents passes the same positions
@@ -236,6 +236,34 @@ Flickable {
                 privateStateContainer.inPageUpDownYStep = 1
             }
         }
+        function isAlphaNum(str) {
+            var isValid = /^[a-zA-Z0-9]$/.test(str)
+            return isValid
+        }
+        function findWordForSearch() {
+            var strNear = ""
+            if(selectionStart !== selectionEnd) {
+                strNear = text.substring(selectionStart, selectionEnd)
+            }
+            else {
+                var textRight = text.substring(cursorPosition, cursorPosition+1)
+                var textLeft = text.substring(cursorPosition-1, cursorPosition)
+                if(isAlphaNum(textLeft) || isAlphaNum(textRight)) {
+                    var leftPosition = cursorPosition
+                    while(leftPosition>0 && isAlphaNum(text.substring(leftPosition-1, leftPosition))) {
+                        leftPosition--
+                    }
+                    var rightPosition = cursorPosition
+                    while(leftPosition<text.length && isAlphaNum(text.substring(rightPosition, rightPosition+1))) {
+                        rightPosition++
+                    }
+                    if(leftPosition < rightPosition) {
+                        strNear = text.substring(leftPosition, rightPosition)
+                    }
+                }
+            }
+            return strNear
+        }
         // fire our extra keyboard handlers
         Keys.onReleased: {
             switch(event.key) {
@@ -254,14 +282,18 @@ Flickable {
                 }
                 break;
             case Qt.Key_Escape:
-                showSearchFrame = false
+                if(searchFrame && 'show' in searchFrame) {
+                    searchFrame.show(false)
+                }
                 break;
             }
         }
         Shortcut {
             sequence: "Ctrl+F"
             onActivated: {
-                showSearchFrame = true
+                if(searchFrame && 'show' in searchFrame) {
+                    searchFrame.show(true, sourceCodeArea.findWordForSearch())
+                }
             }
         }
 

@@ -47,7 +47,7 @@ ApplicationWindow {
         }
     }
     TextAreaExCodeArea {
-        id: sourceCodeArea
+        id: textAreaEx
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: searchFrame.bottom
@@ -69,7 +69,7 @@ ApplicationWindow {
     }
     TextAreaExConnector {
         id: textAreaConnector
-        codeArea: sourceCodeArea
+        textAreaEx: textAreaEx
         searchFrame: searchFrame
         syntaxHighligter: kSyntaxHighltighter
     }
