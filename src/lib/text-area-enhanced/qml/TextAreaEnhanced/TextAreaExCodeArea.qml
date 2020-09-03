@@ -236,9 +236,9 @@ Flickable {
                 privateStateContainer.inPageUpDownYStep = 1
             }
         }
-        function isAlphaNum(str) {
-            var isValid = /^[a-zA-Z0-9_]$/.test(str)
-            return isValid
+        function isPartOfSearchWord(str) {
+            var isPart = /^[a-zA-Z0-9_]$/.test(str)
+            return isPart
         }
         function findWordForSearch() {
             var strNear = ""
@@ -248,13 +248,13 @@ Flickable {
             else {
                 var textRight = text.substring(cursorPosition, cursorPosition+1)
                 var textLeft = text.substring(cursorPosition-1, cursorPosition)
-                if(isAlphaNum(textLeft) || isAlphaNum(textRight)) {
+                if(isPartOfSearchWord(textLeft) || isPartOfSearchWord(textRight)) {
                     var leftPosition = cursorPosition
-                    while(leftPosition>0 && isAlphaNum(text.substring(leftPosition-1, leftPosition))) {
+                    while(leftPosition>0 && isPartOfSearchWord(text.substring(leftPosition-1, leftPosition))) {
                         leftPosition--
                     }
                     var rightPosition = cursorPosition
-                    while(leftPosition<text.length && isAlphaNum(text.substring(rightPosition, rightPosition+1))) {
+                    while(leftPosition<text.length && isPartOfSearchWord(text.substring(rightPosition, rightPosition+1))) {
                         rightPosition++
                     }
                     if(leftPosition < rightPosition) {
