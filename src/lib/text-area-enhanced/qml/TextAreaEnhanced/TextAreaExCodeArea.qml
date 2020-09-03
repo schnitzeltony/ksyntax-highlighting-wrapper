@@ -237,7 +237,7 @@ Flickable {
             }
         }
         function isAlphaNum(str) {
-            var isValid = /^[a-zA-Z0-9]$/.test(str)
+            var isValid = /^[a-zA-Z0-9_]$/.test(str)
             return isValid
         }
         function findWordForSearch() {
