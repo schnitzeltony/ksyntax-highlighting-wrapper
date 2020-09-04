@@ -105,7 +105,7 @@ public:
     QString replace() const;
     void setReplace(const QString& replace);
 
-    const QColor highlightColor();
+    const QColor highlightColor() const;
     void setHighlightColor(const QColor highlightColor);
 
 signals:

@@ -305,7 +305,7 @@ bool KSyntaxHighlightingWrapperPrivate::setReplace(const QString &replace)
     return bChanged;
 }
 
-const QColor KSyntaxHighlightingWrapperPrivate::highlightColor()
+QColor KSyntaxHighlightingWrapperPrivate::highlightColor() const
 {
     return m_highlightColor;
 }
@@ -550,9 +550,9 @@ void KSyntaxHighlightingWrapper::setReplace(const QString &replace)
     }
 }
 
-const QColor KSyntaxHighlightingWrapper::highlightColor()
+const QColor KSyntaxHighlightingWrapper::highlightColor() const
 {
-    Q_D(KSyntaxHighlightingWrapper);
+    Q_D(const KSyntaxHighlightingWrapper);
     return d->highlightColor();
 }
 

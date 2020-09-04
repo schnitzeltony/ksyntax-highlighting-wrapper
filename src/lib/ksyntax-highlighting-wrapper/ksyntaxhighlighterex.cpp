@@ -5,8 +5,7 @@
 
 KSyntaxHighlighterEx::KSyntaxHighlighterEx(QTextDocument *document, KSyntaxHighlightingWrapperPrivate *higlightWrapperPrivate) :
     KSyntaxHighlighting::SyntaxHighlighter(document),
-    m_higlightWrapperPrivate(higlightWrapperPrivate),
-    m_highlightSearchOnly(false)
+    m_higlightWrapperPrivate(higlightWrapperPrivate)
 {
 }
 
@@ -47,7 +46,6 @@ void KSyntaxHighlighterEx::highlightBlock(const QString &text)
 
 void KSyntaxHighlighterEx::newSearch()
 {
-    m_highlightSearchOnly = true;
     // stolen from qt-creator / texteditor.cpp
     const QString pattern = m_higlightWrapperPrivate->regExpr() ?
                 m_higlightWrapperPrivate->search() :
@@ -58,11 +56,9 @@ void KSyntaxHighlighterEx::newSearch()
 
     m_searchExpression.setPattern(pattern);
     m_searchExpression.setPatternOptions(options);
-
     m_searchHighlightBrush = QBrush(m_higlightWrapperPrivate->highlightColor());
 
     // TODO this needs optimization!!!
     rehighlight();
-    m_highlightSearchOnly = false;
 }
 

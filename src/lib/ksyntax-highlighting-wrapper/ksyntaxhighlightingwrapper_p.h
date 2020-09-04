@@ -57,7 +57,7 @@ public:
     QString replace() const;
     bool setReplace(const QString& replace);
 
-    const QColor highlightColor();
+    QColor highlightColor() const;
     bool setHighlightColor(const QColor highlightColor);
 
 private:

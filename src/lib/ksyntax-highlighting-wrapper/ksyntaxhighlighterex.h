@@ -19,7 +19,6 @@ protected:
 
 private:
     KSyntaxHighlightingWrapperPrivate* m_higlightWrapperPrivate;
-    bool m_highlightSearchOnly;
     QBrush m_searchHighlightBrush;
     QRegularExpression m_searchExpression;
 };
