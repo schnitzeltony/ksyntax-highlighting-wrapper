@@ -43,7 +43,6 @@ bool KSyntaxHighlightingWrapperPrivate::setTextDocument(QTextDocument *textDocum
             highlighterChanged = true;
             m_highlighter->setTheme(m_currentTheme);
             m_highlighter->setDefinition(m_currentDefinition);
-            m_highlighter->newSearch();
         }
     }
     return highlighterChanged;

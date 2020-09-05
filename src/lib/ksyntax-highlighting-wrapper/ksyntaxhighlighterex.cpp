@@ -17,8 +17,8 @@ void KSyntaxHighlighterEx::highlightBlock(const QString &text)
 {
     // ksyntax-highlight
     KSyntaxHighlighting::SyntaxHighlighter::highlightBlock(text);
-    /*QTextBlock block = currentBlock();
-    qInfo("highlightBlock line %i", block.firstLineNumber());*/
+    QTextBlock block = currentBlock();
+    //qInfo("highlightBlock line %i", block.firstLineNumber());
 
     // search-highlight
     // stolen from qt-creator / texteditor.cpp
@@ -43,12 +43,11 @@ void KSyntaxHighlighterEx::highlightBlock(const QString &text)
         }
     }
     // make sure block is repainted in QML
-    document()->documentLayout()->updateBlock(currentBlock());
+    document()->documentLayout()->updateBlock(block);
 }
 
 void KSyntaxHighlighterEx::newSearch()
 {
-    qInfo("newSearch");
     // stolen from qt-creator / texteditor.cpp
     const QString pattern = m_higlightWrapperPrivate->regExpr() ?
                 m_higlightWrapperPrivate->search() :
