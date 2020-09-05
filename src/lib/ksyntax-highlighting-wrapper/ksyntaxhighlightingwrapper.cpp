@@ -18,6 +18,8 @@ KSyntaxHighlightingWrapperPrivate::KSyntaxHighlightingWrapperPrivate(KSyntaxHigh
     m_wholeWords(false),
     m_regExpr(false),
     m_highlightColor("yellow"),
+    m_firstLine(0),
+    m_lastLine(0),
     q_ptr(pPublic)
 {
 }
@@ -323,6 +325,15 @@ bool KSyntaxHighlightingWrapperPrivate::setHighlightColor(const QColor highlight
     return colorChanged;
 }
 
+void KSyntaxHighlightingWrapperPrivate::setVisibleArea(const int firstLine, const int lastLine)
+{
+    m_firstLine = firstLine;
+    m_lastLine = lastLine;
+    if(m_highlighter) {
+        m_highlighter->setVisibleArea(firstLine, lastLine);
+    }
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 // public
 KSyntaxHighlightingWrapper::KSyntaxHighlightingWrapper(QObject *parent) :
@@ -391,14 +402,19 @@ void KSyntaxHighlightingWrapper::setDefinitionForMimeType(const QString &mimeTyp
 
 void KSyntaxHighlightingWrapper::findPrevious()
 {
-    // TODO
+    // TODO implement
 }
 
 void KSyntaxHighlightingWrapper::findNext()
 {
-    // TODO
+    // TODO implement
 }
 
+void KSyntaxHighlightingWrapper::setVisibleArea(const int firstLine, const int lastLine)
+{
+    Q_D(KSyntaxHighlightingWrapper);
+    d->setVisibleArea(firstLine, lastLine);
+}
 
  const QString KSyntaxHighlightingWrapper::definitionName()
 {

@@ -65,3 +65,7 @@ void KSyntaxHighlighterEx::newSearch()
     rehighlight();
 }
 
+void KSyntaxHighlighterEx::setVisibleArea(const int firstLine, const int lastLine)
+{
+}
+

@@ -5,6 +5,7 @@ Flickable {
     id: flickableForText
     // connectors to other items
     property var searchFrame
+    property var syntaxHighligter
     // convenient / setup properties:
     // Qt-Creator page up/down mode (first big step option):
     // Advantage: paging up and down documents passes the same positions
@@ -28,6 +29,14 @@ Flickable {
     property alias textDocument: sourceCodeArea.textDocument
 
     // Internal / 'private' types/bindings...
+    onSyntaxHighligterChanged: {
+        if('qmlTextDocument' in syntaxHighligter) {
+            syntaxHighligter.qmlTextDocument = Qt.binding(function() { return textArea.textDocument })
+        }
+        else {
+            console.warn("Cannot bind syntaxHighligter.qmlTextDocument")
+        }
+    }
     onQtCreatorUpDownModeChanged: {
         if(!qtCreatorUpDownMode) {
             privateStateContainer.linesPageUpDownOffset = 0
@@ -46,9 +55,25 @@ Flickable {
     FontMetrics {
         id: fontMetrics
         font: sourceCodeArea.font
-        // a good guess checked for different font sizes / resolutions
-        property int visibleLines: flickableForText.height / lineSpacing - 2
     }
+    function visibleLines() {
+        // a good guess checked for different font sizes / resolutions
+        return Math.round(flickableForText.height / fontMetrics.lineSpacing - 2)
+    }
+    // keep our highlighter informed of visible area
+    function updateHighligherVisibleArea() {
+        var lineStart = Math.round(contentY / fontMetrics.lineSpacing)
+        if(syntaxHighligter) {
+            syntaxHighligter.setVisibleArea(lineStart, lineStart + visibleLines())
+        }
+    }
+    onContentYChanged: {
+        updateHighligherVisibleArea()
+    }
+    onHeightChanged: {
+        updateHighligherVisibleArea()
+    }
+
     // and the magic TextArea...
     TextArea.flickable: TextArea {
         id: sourceCodeArea
@@ -102,7 +127,7 @@ Flickable {
             // page down jumps down line count screen size + offset to keep
             // vertical positions before starting up/down session
             var offsetTried = false
-            var linesToMove = fontMetrics.visibleLines
+            var linesToMove = visibleLines()
             if(up && privateStateContainer.linesPageUpDownOffset < 0) {
                 linesToMove -= privateStateContainer.linesPageUpDownOffset
                 offsetTried = true
@@ -136,7 +161,7 @@ Flickable {
             // position of target line
 
             // Try to set vertical offset for qt-creatorish big step (next page up/down)
-            if(qtCreatorUpDownMode && lineCount >= fontMetrics.visibleLines) {
+            if(qtCreatorUpDownMode && lineCount >= visibleLines()) {
                 // Wide jump was sucessful -> reset offset
                 if(offsetTried && linesToMove === 0) {
                     privateStateContainer.linesPageUpDownOffset = 0
@@ -149,7 +174,7 @@ Flickable {
                         if(privateStateContainer.linesPageUpDownOffset <= 0) {
                             // positive offset for next page down
                             privateStateContainer.linesPageUpDownOffset =
-                                    fontMetrics.visibleLines - linesToMove
+                                    visibleLines() - linesToMove
                         }
                     }
                     else {
@@ -157,7 +182,7 @@ Flickable {
                         if(privateStateContainer.linesPageUpDownOffset >= 0) {
                             // negative offset for next page up
                             privateStateContainer.linesPageUpDownOffset =
-                                    linesToMove - fontMetrics.visibleLines
+                                    linesToMove - visibleLines()
                         }
                     }
                 }
@@ -189,7 +214,7 @@ Flickable {
                 // onCursorRectangleChanged is fired twice:
                 // 2. change of cursorPosition here
                 // 1. flickableForText.contentY change (in onCursorRectangleChanged below)
-                privateStateContainer.inPageUpDownYStep = lineCount >= fontMetrics.visibleLines ? 2 : 1
+                privateStateContainer.inPageUpDownYStep = lineCount >= visibleLines() ? 2 : 1
                 cursorPosition = newCursorPos
             }
         }
@@ -296,7 +321,6 @@ Flickable {
                 }
             }
         }
-
         // Draw box around current line
         Rectangle {
             id: currLineBar

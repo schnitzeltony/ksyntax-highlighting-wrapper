@@ -11,8 +11,8 @@ class KSyntaxHighlightingWrapperPrivate
 {
     Q_DECLARE_PUBLIC(KSyntaxHighlightingWrapper)
 public:
-    virtual ~KSyntaxHighlightingWrapperPrivate();
     KSyntaxHighlightingWrapperPrivate(KSyntaxHighlightingWrapper* pPublic);
+    virtual ~KSyntaxHighlightingWrapperPrivate();
 
     // Q(Quick)TextDocument access
     bool setTextDocument(QTextDocument *textDocument);
@@ -60,6 +60,7 @@ public:
     QColor highlightColor() const;
     bool setHighlightColor(const QColor highlightColor);
 
+    void setVisibleArea(const int firstLine, const int lastLine);
 private:
     KSyntaxHighlighterEx *m_highlighter;
 
@@ -80,8 +81,13 @@ private:
     bool m_wholeWords;
     bool m_regExpr;
 
+    // search params
     QColor m_highlightColor;
     QString m_replace;
+
+    // visible area
+    int m_firstLine;
+    int m_lastLine;
 
     KSyntaxHighlightingWrapper *q_ptr;
 };

@@ -13,7 +13,7 @@ public:
     explicit KSyntaxHighlighterEx(QTextDocument *document, KSyntaxHighlightingWrapperPrivate* higlightWrapperPrivate);
     ~KSyntaxHighlighterEx() override;
     void newSearch();
-
+    void setVisibleArea(const int firstLine, const int lastLine);
 protected:
     void highlightBlock(const QString &text) override;
 

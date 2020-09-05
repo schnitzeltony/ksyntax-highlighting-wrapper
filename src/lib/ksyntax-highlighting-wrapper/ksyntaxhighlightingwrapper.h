@@ -58,6 +58,7 @@ public:
     // search methods
     Q_INVOKABLE void findPrevious();
     Q_INVOKABLE void findNext();
+    Q_INVOKABLE void setVisibleArea(const int firstLine, const int lastLine);
 
     // replace
     Q_PROPERTY(QString replace READ replace WRITE setReplace NOTIFY replaceChanged)
