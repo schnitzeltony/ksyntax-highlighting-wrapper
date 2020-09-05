@@ -21,6 +21,10 @@ private:
     KSyntaxHighlightingWrapperPrivate* m_higlightWrapperPrivate;
     QBrush m_searchHighlightBrush;
     QRegularExpression m_searchExpression;
+    int m_lineHighlightedStart = 0;
+    int m_lineHighlightedEnd = -1; // force highlight first call
+
+    static const int m_extraLinesForInaccuray = 2;
 };
 
 #endif // KSYNTAXHIGHLIGHTEREX_H
