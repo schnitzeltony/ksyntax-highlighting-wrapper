@@ -32,14 +32,25 @@ void KSyntaxHighlighterEx::highlightBlock(const QString &text)
         l = match.capturedLength();
         if (l == 0)
             break;
+        int matchAfter = idx+l;
         if (m_higlightWrapperPrivate->wholeWords() &&
-            ((idx && text.at(idx-1).isLetterOrNumber()) || (idx + l < text.length() && text.at(idx + l).isLetterOrNumber())))
+            ((idx && text.at(idx-1).isLetterOrNumber()) || (matchAfter < text.length() && text.at(matchAfter).isLetterOrNumber())))
             continue;
-        for(int idxHighlight=idx; idxHighlight<idx+l; ++idxHighlight) {
-            // don't ruin what KSyntaxHighlighting has done
-            QTextCharFormat currFormat = format(idxHighlight);
-            currFormat.setBackground(m_searchHighlightBrush);
-            setFormat(idx, l, currFormat);
+        // iterate all text fragments of same char format and modify those in search match
+        for(auto it = block.begin(); !(it.atEnd()); ++it) {
+            QTextFragment currentFragment = it.fragment();
+            if (currentFragment.isValid()) {
+                int fragStart = currentFragment.position() - block.position(); // relative to text-/block-start
+                int fragAfter = fragStart + currentFragment.length();
+                int setStart = idx > fragStart ? idx : fragStart;
+                int setAfter = matchAfter < fragAfter ? matchAfter : fragAfter;
+                if(setStart < setAfter) {
+                    // don't ruin syntax-highlighter's changes
+                    QTextCharFormat currFormat = currentFragment.charFormat();
+                    currFormat.setBackground(m_searchHighlightBrush);
+                    setFormat(setStart, setAfter-setStart, currFormat);
+                }
+            }
         }
     }
     // make sure block is repainted in QML
