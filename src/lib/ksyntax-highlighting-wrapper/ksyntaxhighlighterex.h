@@ -2,7 +2,6 @@
 #define KSYNTAXHIGHLIGHTEREX_H
 
 #include <syntaxhighlighter.h>
-#include <QRegularExpression>
 
 class KSyntaxHighlightingWrapperPrivate;
 
@@ -12,15 +11,12 @@ class KSyntaxHighlighterEx : public KSyntaxHighlighting::SyntaxHighlighter
 public:
     explicit KSyntaxHighlighterEx(QTextDocument *document, KSyntaxHighlightingWrapperPrivate* higlightWrapperPrivate);
     ~KSyntaxHighlighterEx() override;
-    void newSearch();
-    void setVisibleArea(const int firstLine, const int lastLine);
+    // make public for KSyntaxHighlightingWrapperPrivate
+    void setFormat(int start, int count, const QTextCharFormat &format);
 protected:
     void highlightBlock(const QString &text) override;
-
 private:
     KSyntaxHighlightingWrapperPrivate* m_higlightWrapperPrivate;
-    QBrush m_searchHighlightBrush;
-    QRegularExpression m_searchExpression;
 };
 
 #endif // KSYNTAXHIGHLIGHTEREX_H

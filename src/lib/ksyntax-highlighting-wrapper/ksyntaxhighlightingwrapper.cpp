@@ -28,6 +28,45 @@ KSyntaxHighlightingWrapperPrivate::~KSyntaxHighlightingWrapperPrivate()
 {
 }
 
+void KSyntaxHighlightingWrapperPrivate::highlightBlockSearch(const QString &text, QTextBlock block, bool afterHighlight)
+{
+    // search-highlight
+    // stolen from qt-creator / texteditor.cpp
+    int idx = -1;
+    int l = 1;
+    while (idx < text.length()) {
+        const QRegularExpressionMatch match = m_searchExpression.match(text, idx + 1);
+        if (!match.hasMatch())
+            break;
+        idx = match.capturedStart();
+        l = match.capturedLength();
+        if (l == 0)
+            break;
+        int matchAfter = idx+l;
+        if (wholeWords() &&
+            ((idx && text.at(idx-1).isLetterOrNumber()) || (matchAfter < text.length() && text.at(matchAfter).isLetterOrNumber())))
+            continue;
+        // iterate all text fragments of same char format and modify those in search match
+        for(auto it = block.begin(); !(it.atEnd()); ++it) {
+            QTextFragment currentFragment = it.fragment();
+            if (currentFragment.isValid()) {
+                int fragStart = currentFragment.position() - block.position(); // relative to text-/block-start
+                int fragAfter = fragStart + currentFragment.length();
+                int setStart = idx > fragStart ? idx : fragStart;
+                int setAfter = matchAfter < fragAfter ? matchAfter : fragAfter;
+                if(setStart < setAfter) {
+                    // don't ruin syntax-highlighter's changes
+                    QTextCharFormat currFormat = currentFragment.charFormat();
+                    currFormat.setBackground(m_searchHighlightBrush);
+                    if(afterHighlight) {
+                        m_highlighter->setFormat(setStart, setAfter-setStart, currFormat);
+                    }
+                }
+            }
+        }
+    }
+}
+
 bool KSyntaxHighlightingWrapperPrivate::setTextDocument(QTextDocument *textDocument)
 {
     bool highlighterChanged = false;
@@ -232,7 +271,7 @@ bool KSyntaxHighlightingWrapperPrivate::setSearch(const QString &search)
         m_search = search;
         bChanged = true;
         if(m_highlighter) {
-            m_highlighter->newSearch();
+            newSearch();
         }
     }
     return bChanged;
@@ -250,7 +289,7 @@ bool KSyntaxHighlightingWrapperPrivate::setCaseSensitive(const bool caseSensitiv
         m_caseSensitive = caseSensitive;
         bChanged = true;
         if(m_highlighter) {
-            m_highlighter->newSearch();
+            newSearch();
         }
     }
     return bChanged;
@@ -268,7 +307,7 @@ bool KSyntaxHighlightingWrapperPrivate::setWholeWords(const bool wholeWords)
         m_wholeWords = wholeWords;
         bChanged = true;
         if(m_highlighter) {
-            m_highlighter->newSearch();
+            newSearch();
         }
     }
     return bChanged;
@@ -285,7 +324,7 @@ bool KSyntaxHighlightingWrapperPrivate::setRegExpr(const bool regExpr)
     if(m_regExpr != regExpr) {
         bChanged = true;
         if(m_highlighter) {
-            m_highlighter->newSearch();
+            newSearch();
         }
     }
     return bChanged;
@@ -318,7 +357,7 @@ bool KSyntaxHighlightingWrapperPrivate::setHighlightColor(const QColor highlight
         m_highlightColor = highlightColor;
         colorChanged = true;
         if(m_highlighter) {
-            m_highlighter->newSearch();
+            newSearch();
         }
     }
     return colorChanged;
@@ -328,8 +367,26 @@ void KSyntaxHighlightingWrapperPrivate::setVisibleArea(const int firstLine, cons
 {
     m_firstLine = firstLine;
     m_lastLine = lastLine;
+    // TODO?
+}
+
+void KSyntaxHighlightingWrapperPrivate::newSearch()
+{
+    // stolen from qt-creator / texteditor.cpp
+    const QString pattern = regExpr() ?
+                search() :
+                QRegularExpression::escape(search());
+    const QRegularExpression::PatternOptions options = caseSensitive() ?
+                QRegularExpression::NoPatternOption :
+                QRegularExpression::CaseInsensitiveOption;
+
+    m_searchExpression.setPattern(pattern);
+    m_searchExpression.setPatternOptions(options);
+    m_searchHighlightBrush = QBrush(highlightColor());
+
+    // TODO this needs optimization!!!
     if(m_highlighter) {
-        m_highlighter->setVisibleArea(firstLine, lastLine);
+        m_highlighter->rehighlight();
     }
 }
 

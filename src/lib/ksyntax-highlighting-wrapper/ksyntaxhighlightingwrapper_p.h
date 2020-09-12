@@ -6,6 +6,7 @@
 #include <repository.h>
 #include <definition.h>
 #include <theme.h>
+#include <QRegularExpression>
 
 class KSyntaxHighlightingWrapperPrivate
 {
@@ -14,6 +15,9 @@ public:
     KSyntaxHighlightingWrapperPrivate(KSyntaxHighlightingWrapper* pPublic);
     virtual ~KSyntaxHighlightingWrapperPrivate();
 
+    void highlightBlockSearch(const QString &text, QTextBlock block, bool afterHighlight);
+
+private:
     // Q(Quick)TextDocument access
     bool setTextDocument(QTextDocument *textDocument);
     QTextDocument *textDocument() const;
@@ -60,10 +64,12 @@ public:
     QColor highlightColor() const;
     bool setHighlightColor(const QColor highlightColor);
 
+    // search helpers
     void setVisibleArea(const int firstLine, const int lastLine);
-private:
-    KSyntaxHighlighterEx *m_highlighter;
+    void newSearch();
 
+    // highlighter customized for us
+    KSyntaxHighlighterEx *m_highlighter;
     // We have to keep for getter
     QQuickTextDocument *m_quickTextDocument;
     // For brute force redraw hack
@@ -88,6 +94,10 @@ private:
     // visible area
     int m_firstLine;
     int m_lastLine;
+
+    // search data
+    QBrush m_searchHighlightBrush;
+    QRegularExpression m_searchExpression;
 
     KSyntaxHighlightingWrapper *q_ptr;
 };
