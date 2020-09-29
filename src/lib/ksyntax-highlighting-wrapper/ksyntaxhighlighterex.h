@@ -13,6 +13,8 @@ public:
     ~KSyntaxHighlighterEx() override;
     // make public for KSyntaxHighlightingWrapperPrivate
     void setFormat(int start, int count, const QTextCharFormat &format);
+public slots:
+    void rehighlightBlock(const QTextBlock &block);
 protected:
     void highlightBlock(const QString &text) override;
 private:
