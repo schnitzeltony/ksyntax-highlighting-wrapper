@@ -56,7 +56,7 @@ import KSyntaxHighlighting 1.0
 ```
 
 ----------------------------------------------
-An [example-application](src/example/main.qml)
+An [example-application](src/example/qml/main.qml)
 
 ![Screenshot_2020-08-23_16-01-08](https://user-images.githubusercontent.com/2571823/90980154-fac0a280-e559-11ea-9054-25c9c3678083.png)
 
