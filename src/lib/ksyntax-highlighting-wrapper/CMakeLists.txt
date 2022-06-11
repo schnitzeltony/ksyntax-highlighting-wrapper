@@ -37,7 +37,7 @@ target_include_directories(KSyntaxHighlightingWrapper
 target_compile_options(KSyntaxHighlightingWrapper PRIVATE -Wall)
 
 target_link_libraries(KSyntaxHighlightingWrapper
-    PRIVATE
+    PUBLIC
         Qt5::Core
         Qt5::Quick
         KF5::SyntaxHighlighting
