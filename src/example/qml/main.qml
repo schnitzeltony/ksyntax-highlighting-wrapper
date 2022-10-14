@@ -42,7 +42,7 @@ ApplicationWindow {
                 Layout.rightMargin: toolbar.tmargins
                 Layout.minimumWidth: 180
                 model: kSyntaxHighltighter.themeNames
-                currentIndex: model.indexOf("Default")
+                currentIndex: model.indexOf("Breeze Light")
             }
         }
     }

@@ -49,7 +49,7 @@ import KSyntaxHighlighting 1.0
         KSyntaxHighlighting {
             qmlTextDocument: textArea.textDocument
             definitionName: "QML"
-            themeName: "Default"
+            themeName: "Breeze Light"
         }
     }
 ...
