@@ -2,7 +2,7 @@
 #include <ksyntaxhighlightingwrapper_p.h>
 #include <QQuickTextDocument>
 #include <QQmlEngine>
-#include <theme.h>
+#include <KSyntaxHighlighting/theme.h>
 
 QT_BEGIN_NAMESPACE
 

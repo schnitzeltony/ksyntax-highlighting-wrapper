@@ -3,9 +3,9 @@
 
 #include "ksyntaxhighlightingwrapper.h"
 #include "ksyntaxhighlighterex.h"
-#include <repository.h>
-#include <definition.h>
-#include <theme.h>
+#include <KSyntaxHighlighting/repository.h>
+#include <KSyntaxHighlighting/definition.h>
+#include <KSyntaxHighlighting/theme.h>
 #include <QRegularExpression>
 
 class KSyntaxHighlightingWrapperPrivate

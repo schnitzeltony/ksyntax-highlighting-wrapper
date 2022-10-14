@@ -1,7 +1,7 @@
 #ifndef KSYNTAXHIGHLIGHTEREX_H
 #define KSYNTAXHIGHLIGHTEREX_H
 
-#include <syntaxhighlighter.h>
+#include <KSyntaxHighlighting/syntaxhighlighter.h>
 
 class KSyntaxHighlightingWrapperPrivate;
 
