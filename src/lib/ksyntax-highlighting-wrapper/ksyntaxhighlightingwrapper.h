@@ -76,7 +76,7 @@ public:
 
     const QString definitionName();
     void setDefinitionName(const QString& definitionName);
-    const int definitionNumber();
+    int definitionNumber() const;
     void setDefinitionNumber(const int definitionNumber);
 
     const QStringList definitionNames() const;

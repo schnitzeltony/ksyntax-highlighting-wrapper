@@ -26,13 +26,13 @@ private:
 
     // Definition access
     bool setDefinition(KSyntaxHighlighting::Definition def);
-    KSyntaxHighlighting::Definition definition();
+    KSyntaxHighlighting::Definition definition() const;
     bool setDefinitionForFileName(const QString &fileName);
     bool setDefinitionForMimeType(const QString &mimeType);
-    const QString definitionName();
+    const QString definitionName() const;
     bool setDefinitionName(const QString& definitionName);
     const QStringList definitionNames() const;
-    int definitionNumber();
+    int definitionNumber() const;
     bool setDefinitionNumber(const int definitionNumber);
 
     // Theme access

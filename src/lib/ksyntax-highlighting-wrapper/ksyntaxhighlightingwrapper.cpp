@@ -128,7 +128,7 @@ bool KSyntaxHighlightingWrapperPrivate::setDefinition(KSyntaxHighlighting::Defin
     return changed;
 }
 
-KSyntaxHighlighting::Definition KSyntaxHighlightingWrapperPrivate::definition()
+KSyntaxHighlighting::Definition KSyntaxHighlightingWrapperPrivate::definition() const
 {
     return m_currentDefinition;
 }
@@ -145,7 +145,7 @@ bool KSyntaxHighlightingWrapperPrivate::setDefinitionForMimeType(const QString &
     return setDefinition(def);
 }
 
-const QString KSyntaxHighlightingWrapperPrivate::definitionName()
+const QString KSyntaxHighlightingWrapperPrivate::definitionName() const
 {
     return definition().name();
 }
@@ -165,7 +165,7 @@ const QStringList KSyntaxHighlightingWrapperPrivate::definitionNames() const
     return definitionNames;
 }
 
-int KSyntaxHighlightingWrapperPrivate::definitionNumber()
+int KSyntaxHighlightingWrapperPrivate::definitionNumber() const
 {
     return definitionNames().indexOf(definitionName());
 }
@@ -486,9 +486,9 @@ void KSyntaxHighlightingWrapper::setDefinitionName(const QString &definitionName
     }
 }
 
-const int KSyntaxHighlightingWrapper::definitionNumber()
+int KSyntaxHighlightingWrapper::definitionNumber() const
 {
-    Q_D(KSyntaxHighlightingWrapper);
+    const Q_D(KSyntaxHighlightingWrapper);
     return d->definitionNumber();
 }
 
