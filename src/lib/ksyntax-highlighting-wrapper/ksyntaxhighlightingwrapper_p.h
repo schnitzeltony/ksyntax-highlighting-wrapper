@@ -36,9 +36,9 @@ private:
     bool setDefinitionNumber(const int definitionNumber);
 
     // Theme access
-    KSyntaxHighlighting::Theme theme();
+    KSyntaxHighlighting::Theme theme() const;
     bool setTheme(KSyntaxHighlighting::Theme theme);
-    const QString themeName();
+    const QString themeName() const;
     bool setThemeName(const QString& themeName);
     int themeNumber();
     bool setThemeNumber(const int themeNumber);

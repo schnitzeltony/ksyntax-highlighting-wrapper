@@ -200,12 +200,12 @@ bool KSyntaxHighlightingWrapperPrivate::setTheme(KSyntaxHighlighting::Theme them
     return changed;
 }
 
-const QString KSyntaxHighlightingWrapperPrivate::themeName()
+const QString KSyntaxHighlightingWrapperPrivate::themeName() const
 {
     return theme().name();
 }
 
-KSyntaxHighlighting::Theme KSyntaxHighlightingWrapperPrivate::theme()
+KSyntaxHighlighting::Theme KSyntaxHighlightingWrapperPrivate::theme() const
 {
     return m_currentTheme;
 }
@@ -472,9 +472,9 @@ void KSyntaxHighlightingWrapper::setVisibleArea(const int firstLine, const int l
     d->setVisibleArea(firstLine, lastLine);
 }
 
- const QString KSyntaxHighlightingWrapper::definitionName()
+ QString KSyntaxHighlightingWrapper::definitionName() const
 {
-    Q_D(KSyntaxHighlightingWrapper);
+    const Q_D(KSyntaxHighlightingWrapper);
     return d->definitionName();
 }
 
@@ -506,9 +506,9 @@ const QStringList KSyntaxHighlightingWrapper::definitionNames() const
     return d->definitionNames();
 }
 
-const QString KSyntaxHighlightingWrapper::themeName()
+QString KSyntaxHighlightingWrapper::themeName() const
 {
-    Q_D(KSyntaxHighlightingWrapper);
+    const Q_D(KSyntaxHighlightingWrapper);
     return d->themeName();
 }
 
@@ -520,9 +520,9 @@ void KSyntaxHighlightingWrapper::setThemeName(const QString &themeName)
     }
 }
 
-const QString KSyntaxHighlightingWrapper::themeNameTranslated()
+const QString KSyntaxHighlightingWrapper::themeNameTranslated() const
 {
-    Q_D(KSyntaxHighlightingWrapper);
+    const Q_D(KSyntaxHighlightingWrapper);
     return d->theme().translatedName();
 }
 

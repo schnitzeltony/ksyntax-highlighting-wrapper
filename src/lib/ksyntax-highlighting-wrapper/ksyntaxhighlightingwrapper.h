@@ -74,16 +74,16 @@ public:
     void setQmlTextDocument(QQuickTextDocument *qmlTextDocument);
     QQuickTextDocument *qmlTextDocument() const;
 
-    const QString definitionName();
+    QString definitionName() const;
     void setDefinitionName(const QString& definitionName);
     int definitionNumber() const;
     void setDefinitionNumber(const int definitionNumber);
 
     const QStringList definitionNames() const;
 
-    const QString themeName();
+    QString themeName() const;
     void setThemeName(const QString& themeName);
-    const QString themeNameTranslated();
+    const QString themeNameTranslated() const;
     int themeNumber();
     void setThemeNumber(const int themeNumber);
 
