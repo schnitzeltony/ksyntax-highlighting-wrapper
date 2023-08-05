@@ -14,8 +14,6 @@ option(KSW_LOAD_QML_FROM_SOURCE "Load QML files from source for proper debugging
 # global Qt/C++ settings
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # cmake macros
 include(FeatureSummary)
