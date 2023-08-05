@@ -2,17 +2,11 @@
 #define KSYNTAX_HIGHLIGHTING_WRAPPER_H
 
 #include "ksyntaxhighlightingwrapper_export.h"
-#include <QObject>
+#include <QTextDocument>
+#include <QQmlEngine>
+#include <QQuickTextDocument>
 
 QT_BEGIN_NAMESPACE
-
-// forward
-class QQmlEngine;
-class QQuickTextDocument;
-class QTextDocument;
-
-// clang: be quiet
-QT_WARNING_DISABLE_CLANG("-Wshadow-field")
 
 class KSyntaxHighlightingWrapperPrivate;
 class KSYNTAXHIGHLIGHTINGWRAPPER_EXPORT KSyntaxHighlightingWrapper : public QObject

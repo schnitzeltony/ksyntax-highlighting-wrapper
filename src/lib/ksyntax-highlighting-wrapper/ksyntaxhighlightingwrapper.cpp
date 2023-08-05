@@ -1,7 +1,5 @@
 #include <ksyntaxhighlightingwrapper.h>
 #include <ksyntaxhighlightingwrapper_p.h>
-#include <QQuickTextDocument>
-#include <QQmlEngine>
 #include <KSyntaxHighlighting/theme.h>
 
 QT_BEGIN_NAMESPACE
@@ -120,9 +118,8 @@ bool KSyntaxHighlightingWrapperPrivate::setDefinition(KSyntaxHighlighting::Defin
         if(def != m_currentDefinition) {
             m_currentDefinition = def;
             changed = true;
-            if(m_highlighter) {
+            if(m_highlighter)
                 m_highlighter->setDefinition(def);
-            }
         }
     }
     return changed;
@@ -158,10 +155,10 @@ bool KSyntaxHighlightingWrapperPrivate::setDefinitionName(const QString &definit
 
 const QStringList KSyntaxHighlightingWrapperPrivate::definitionNames() const
 {
+    const auto definitions = m_repository.definitions();
     QStringList definitionNames;
-    for(auto definition : m_repository.definitions()) {
+    for(const auto &definition : definitions)
         definitionNames.append(definition.name());
-    }
     return definitionNames;
 }
 
@@ -175,9 +172,8 @@ bool KSyntaxHighlightingWrapperPrivate::setDefinitionNumber(const int definition
     bool changed = false;
     if(definitionNumber >= 0) {
         QStringList names = definitionNames();
-        if(definitionNumber < names.count()) {
+        if(definitionNumber < names.count())
             changed = setDefinitionName(names[definitionNumber]);
-        }
     }
     return changed;
 }
@@ -234,28 +230,27 @@ bool KSyntaxHighlightingWrapperPrivate::setThemeNumber(const int themeNumber)
     bool changed = false;
     if(themeNumber >= 0) {
         QVector<KSyntaxHighlighting::Theme> themes = m_repository.themes();
-        if(themeNumber < themes.count()) {
+        if(themeNumber < themes.count())
             changed = setTheme(themes[themeNumber]);
-        }
     }
     return changed ;
 }
 
 const QStringList KSyntaxHighlightingWrapperPrivate::themeNames() const
 {
+    const auto themes = m_repository.themes();
     QStringList themeNames;
-    for(auto theme : m_repository.themes()) {
+    for(const auto &theme : themes)
         themeNames.append(theme.name());
-    }
     return themeNames;
 }
 
 const QStringList KSyntaxHighlightingWrapperPrivate::themeNamesTranslated() const
 {
+    const auto themes = m_repository.themes();
     QStringList themeNamesTranslated;
-    for(auto theme : m_repository.themes()) {
+    for(const auto &theme : themes)
         themeNamesTranslated.append(theme.translatedName());
-    }
     return themeNamesTranslated;
 }
 
@@ -270,9 +265,8 @@ bool KSyntaxHighlightingWrapperPrivate::setSearch(const QString &search)
     if(m_search != search) {
         m_search = search;
         bChanged = true;
-        if(m_highlighter) {
+        if(m_highlighter)
             newSearch();
-        }
     }
     return bChanged;
 }
@@ -288,9 +282,8 @@ bool KSyntaxHighlightingWrapperPrivate::setCaseSensitive(const bool caseSensitiv
     if(m_caseSensitive != caseSensitive) {
         m_caseSensitive = caseSensitive;
         bChanged = true;
-        if(m_highlighter) {
+        if(m_highlighter)
             newSearch();
-        }
     }
     return bChanged;
 }
@@ -306,9 +299,8 @@ bool KSyntaxHighlightingWrapperPrivate::setWholeWords(const bool wholeWords)
     if(m_wholeWords != wholeWords) {
         m_wholeWords = wholeWords;
         bChanged = true;
-        if(m_highlighter) {
+        if(m_highlighter)
             newSearch();
-        }
     }
     return bChanged;
 }
@@ -323,9 +315,8 @@ bool KSyntaxHighlightingWrapperPrivate::setRegExpr(const bool regExpr)
     bool bChanged = false;
     if(m_regExpr != regExpr) {
         bChanged = true;
-        if(m_highlighter) {
+        if(m_highlighter)
             newSearch();
-        }
     }
     return bChanged;
 }
@@ -356,9 +347,8 @@ bool KSyntaxHighlightingWrapperPrivate::setHighlightColor(const QColor highlight
     if(highlightColor != m_highlightColor) {
         m_highlightColor = highlightColor;
         colorChanged = true;
-        if(m_highlighter) {
+        if(m_highlighter)
             newSearch();
-        }
     }
     return colorChanged;
 }
@@ -385,9 +375,8 @@ void KSyntaxHighlightingWrapperPrivate::newSearch()
     m_searchHighlightBrush = QBrush(highlightColor());
 
     // TODO this needs optimization!!!
-    if(m_highlighter) {
+    if(m_highlighter)
         m_highlighter->rehighlight();
-    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -415,9 +404,8 @@ void KSyntaxHighlightingWrapper::registerQml()
 void KSyntaxHighlightingWrapper::setTextDocument(QTextDocument *textDocument)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setTextDocument(textDocument)) {
+    if(d->setTextDocument(textDocument))
         emit documentChanged();
-    }
 }
 
 QTextDocument *KSyntaxHighlightingWrapper::textDocument() const
@@ -429,9 +417,8 @@ QTextDocument *KSyntaxHighlightingWrapper::textDocument() const
 void KSyntaxHighlightingWrapper::setQmlTextDocument(QQuickTextDocument *qmlTextDocument)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setQmlTextDocument(qmlTextDocument)) {
+    if(d->setQmlTextDocument(qmlTextDocument))
         emit documentChanged();
-    }
 }
 
 QQuickTextDocument *KSyntaxHighlightingWrapper::qmlTextDocument() const
@@ -443,17 +430,15 @@ QQuickTextDocument *KSyntaxHighlightingWrapper::qmlTextDocument() const
 void KSyntaxHighlightingWrapper::setDefinitionForFileName(const QString &fileName)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setDefinitionForFileName(fileName)) {
+    if(d->setDefinitionForFileName(fileName))
         emit definitionChanged();
-    }
 }
 
 void KSyntaxHighlightingWrapper::setDefinitionForMimeType(const QString &mimeType)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setDefinitionForMimeType(mimeType)) {
+    if(d->setDefinitionForMimeType(mimeType))
         emit definitionChanged();
-    }
 }
 
 void KSyntaxHighlightingWrapper::findPrevious()
@@ -481,9 +466,8 @@ void KSyntaxHighlightingWrapper::setVisibleArea(const int firstLine, const int l
 void KSyntaxHighlightingWrapper::setDefinitionName(const QString &definitionName)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setDefinitionName(definitionName)) {
+    if(d->setDefinitionName(definitionName))
         emit definitionChanged();
-    }
 }
 
 int KSyntaxHighlightingWrapper::definitionNumber() const
@@ -495,9 +479,8 @@ int KSyntaxHighlightingWrapper::definitionNumber() const
 void KSyntaxHighlightingWrapper::setDefinitionNumber(const int definitionNumber)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setDefinitionNumber(definitionNumber)) {
+    if(d->setDefinitionNumber(definitionNumber))
         emit definitionChanged();
-    }
 }
 
 const QStringList KSyntaxHighlightingWrapper::definitionNames() const
@@ -515,9 +498,8 @@ QString KSyntaxHighlightingWrapper::themeName() const
 void KSyntaxHighlightingWrapper::setThemeName(const QString &themeName)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setThemeName(themeName)) {
+    if(d->setThemeName(themeName))
         emit themeChanged();
-    }
 }
 
 const QString KSyntaxHighlightingWrapper::themeNameTranslated() const
@@ -535,9 +517,8 @@ int KSyntaxHighlightingWrapper::themeNumber()
 void KSyntaxHighlightingWrapper::setThemeNumber(const int themeNumber)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setThemeNumber(themeNumber)) {
+    if(d->setThemeNumber(themeNumber))
         emit themeChanged();
-    }
 }
 
 const QStringList KSyntaxHighlightingWrapper::themeNames() const
@@ -561,9 +542,8 @@ QString KSyntaxHighlightingWrapper::search() const
 void KSyntaxHighlightingWrapper::setSearch(const QString &search)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setSearch(search)) {
+    if(d->setSearch(search))
         emit searchParamChanged();
-    }
 }
 
 bool KSyntaxHighlightingWrapper::caseSensitive() const
@@ -575,9 +555,8 @@ bool KSyntaxHighlightingWrapper::caseSensitive() const
 void KSyntaxHighlightingWrapper::setCaseSensitive(const bool caseSensitive)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setCaseSensitive(caseSensitive)) {
+    if(d->setCaseSensitive(caseSensitive))
         emit searchParamChanged();
-    }
 }
 
 bool KSyntaxHighlightingWrapper::wholeWords() const
@@ -589,9 +568,8 @@ bool KSyntaxHighlightingWrapper::wholeWords() const
 void KSyntaxHighlightingWrapper::setWholeWords(const bool wholeWords)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setWholeWords(wholeWords)) {
+    if(d->setWholeWords(wholeWords))
         emit searchParamChanged();
-    }
 }
 
 bool KSyntaxHighlightingWrapper::regExpr() const
@@ -603,9 +581,8 @@ bool KSyntaxHighlightingWrapper::regExpr() const
 void KSyntaxHighlightingWrapper::setRegExpr(const bool regExpr)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setRegExpr(regExpr)) {
+    if(d->setRegExpr(regExpr))
         emit searchParamChanged();
-    }
 }
 
 QString KSyntaxHighlightingWrapper::replace() const
@@ -617,9 +594,8 @@ QString KSyntaxHighlightingWrapper::replace() const
 void KSyntaxHighlightingWrapper::setReplace(const QString &replace)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setReplace(replace)) {
+    if(d->setReplace(replace))
         emit replaceChanged();
-    }
 }
 
 const QColor KSyntaxHighlightingWrapper::highlightColor() const
@@ -631,9 +607,8 @@ const QColor KSyntaxHighlightingWrapper::highlightColor() const
 void KSyntaxHighlightingWrapper::setHighlightColor(const QColor highlightColor)
 {
     Q_D(KSyntaxHighlightingWrapper);
-    if(d->setHighlightColor(highlightColor)) {
+    if(d->setHighlightColor(highlightColor))
         emit highlightColorChanged();
-    }
 }
 
 QT_END_NAMESPACE
